@@ -1,0 +1,153 @@
+# Every five minutes: re-read the trail addresses that moved, judge the new ones, publish the API
+# and deploy the site. Trail state (a SQLite file and a price cache) travels between runs in the
+# Actions cache. The web app comes from the `site` release, written by the web workflow.
+#
+# Two jobs. `generate` runs the tracer, which parses data from third-party APIs, with a token that
+# cannot deploy. `deploy` holds the Pages and OIDC permissions and runs nothing but GitHub's deploy
+# action, on the artifact that `generate` verified.
+#
+# Every third-party action is pinned to a commit, not a tag: the Binance breach began with a
+# tampered package, and a tag can be moved to point at different code.
+name: Live pipeline
+
+on:
+  schedule:
+    # Off the round minutes, which GitHub's scheduler serves last under load.
+    - cron: "3-59/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      cold_start:
+        description: "No verified state exists: rebuild the trail from the seeds (deploys stay refused until it is back to size, unless allow_shrink)"
+        type: boolean
+        default: false
+      allow_shrink:
+        description: "Deploy even if the trail would shrink by more than a fifth against the live site"
+        type: boolean
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: live-pipeline
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: write  # to delete superseded state caches and keep the cadence
+      attestations: read
+    env:
+      GOLDENHOUR_STATE: state
+      ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+      TRONGRID_API_KEY: ${{ secrets.TRONGRID_API_KEY }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --locked --extra ml
+
+      - name: Restore trail state
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6
+        with:
+          path: state
+          key: state-${{ github.run_id }}
+          restore-keys: state-
+
+      - name: Bootstrap the state if the cache was empty
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GOLDENHOUR_ALLOW_COLD_START: ${{ inputs.cold_start && '1' || '' }}
+        run: scripts/bootstrap-state.sh
+
+      - name: Find the current web build
+        id: keys
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/release-keys.sh
+
+      - name: Restore web build
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6
+        with:
+          path: web-build
+          key: web-${{ steps.keys.outputs.web || 'none' }}
+
+      - name: Download the web build if the cache did not have it
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WEB_ASSET: ${{ steps.keys.outputs.web_asset }}
+        run: scripts/fetch-releases.sh
+
+      - name: Follow the money
+        run: uv run goldenhour trace --live --budget 240 --max-judge 200
+
+      - name: Publish the API
+        run: uv run goldenhour publish --out site/api/v1
+
+      - name: Verify the site before it can be deployed
+        env:
+          ALLOW_SHRINK: ${{ inputs.allow_shrink && '--allow-shrink' || '' }}
+        run: uv run goldenhour verify-site site $ALLOW_SHRINK
+
+      - name: Save trail state
+        if: always()
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6
+        with:
+          path: state
+          key: state-${{ github.run_id }}
+
+      - name: Delete superseded trail state
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh cache list --key state- --sort created_at --order desc --limit 100 --json id --jq '.[3:][].id' \
+            | xargs -r -n1 gh cache delete || true
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5
+        with:
+          path: site
+
+      - name: Keep the cadence if the scheduler stalls
+        if: always()
+        continue-on-error: true  # never the reason a verified site is not deployed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          # GitHub's cron scheduler can be late or silent for long stretches. When it has not started
+          # a run in the last fifteen minutes, this run paces itself to about five minutes and starts
+          # the next one. While the scheduler works, this step does nothing.
+          last="$(gh run list --workflow pipeline.yml --event schedule --limit 1 --json createdAt --jq '.[0].createdAt // ""')"
+          if [ -n "$last" ] && [ $(( $(date -u +%s) - $(date -u -d "$last" +%s) )) -lt 900 ]; then
+            echo "the scheduler is running; nothing to do"
+            exit 0
+          fi
+          started="$(gh run view "$GITHUB_RUN_ID" --json startedAt --jq .startedAt)"
+          spent=$(( $(date -u +%s) - $(date -u -d "$started" +%s) ))
+          if [ "$spent" -lt 270 ]; then sleep $(( 270 - spent )); fi
+          gh workflow run pipeline.yml
+
+  deploy:
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346  # v5

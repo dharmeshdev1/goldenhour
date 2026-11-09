@@ -1,0 +1,69 @@
+{
+ "v": 2,
+ "entries": {
+  "a1ac18d0dc4c310b53081a94b2ad523d285fd4e0d695abf9b76f7225310abd2f": [
+   {
+    "node": "tron:TNBUXPEqNPK9GWbrooQgBoRNsGS3Rh4f5x",
+    "chain": "tron",
+    "address": "TNBUXPEqNPK9GWbrooQgBoRNsGS3Rh4f5x",
+    "role": "seed",
+    "category": "attacker",
+    "label": "FBI list #404",
+    "hop": 1,
+    "received_usd": 86301119.51,
+    "held_usd": 31876636.41,
+    "first_ts": 1793305775,
+    "reason": "Named in the FBI alert of 31 October 2026 as holding or having held stolen assets.",
+    "exposure": "trail"
+   }
+  ],
+  "a1a866b07a6d6c4a2b710a4ce09c799709322d5d1546afdb4f4771354b3f3a42": [
+   {
+    "node": "tron:TrasnbJp86wEyqifnY6ZWfvduih1MtfdLu",
+    "chain": "tron",
+    "address": "TrasnbJp86wEyqifnY6ZWfvduih1MtfdLu",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 6,
+    "received_usd": 23088.07,
+    "held_usd": 8329.52,
+    "first_ts": 1793487745,
+    "reason": "83% of the value it ever received came from trail addresses (hop 6).",
+    "exposure": "trail"
+   }
+  ],
+  "a1a25ed6fc7d77a3870f6d724750e02e39565faa8f1cda98b1cbab949f1943a7": [
+   {
+    "node": "ethereum:0x9b0349e34b8e4e12204bee3774e29f1ea7dd182e",
+    "chain": "ethereum",
+    "address": "0x9b0349e34b8e4e12204bee3774e29f1ea7dd182e",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 8,
+    "received_usd": 109458.06,
+    "held_usd": 35990.57,
+    "first_ts": 1793771513,
+    "reason": "97% of the value it ever received came from trail addresses (hop 8).",
+    "exposure": "trail"
+   }
+  ],
+  "a1a17f9a5e7a83f315859ee9f1e5e50a79c4b6daa903ee2836db6101c8c30129": [
+   {
+    "node": "ethereum:0x88d8b589c7fdda5d57bf163c55f4f330ba980bfd",
+    "chain": "ethereum",
+    "address": "0x88d8b589c7fdda5d57bf163c55f4f330ba980bfd",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 11,
+    "received_usd": 366140.46,
+    "held_usd": 9002.32,
+    "first_ts": 1793461127,
+    "reason": "86% of the value it ever received came from trail addresses (hop 11).",
+    "exposure": "trail"
+   }
+  ]
+ }
+}

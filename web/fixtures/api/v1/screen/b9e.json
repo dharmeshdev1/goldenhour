@@ -1,0 +1,37 @@
+{
+ "v": 2,
+ "entries": {
+  "b9eb858a563769259bb71d37391425c39bab9cb64a716721ee967316282f1d7e": [
+   {
+    "node": "bitcoin:bc1qp65k7ta4ywe7t80ckx9ctxwm83j27lzy5zyw4u",
+    "chain": "bitcoin",
+    "address": "bc1qp65k7ta4ywe7t80ckx9ctxwm83j27lzy5zyw4u",
+    "role": "seed",
+    "category": "attacker",
+    "label": "FBI list #211",
+    "hop": 1,
+    "received_usd": 162592578.1,
+    "held_usd": 13680235.89,
+    "first_ts": 1793305248,
+    "reason": "Named in the FBI alert of 31 October 2026 as holding or having held stolen assets.",
+    "exposure": "trail"
+   }
+  ],
+  "b9ed242adb02d9e3cccd212ba58d0db1160f51fd9a5ccac6ea3ce5d46b5bfacf": [
+   {
+    "node": "ethereum:0x50cae1afb2ca5e0d4eaf3c3bb2a9ed200120a8d6",
+    "chain": "ethereum",
+    "address": "0x50cae1afb2ca5e0d4eaf3c3bb2a9ed200120a8d6",
+    "role": "counterparty",
+    "category": "unknown",
+    "label": "",
+    "hop": 8,
+    "received_usd": 32213.28,
+    "held_usd": 2984.8,
+    "first_ts": 1793678140,
+    "reason": "Received value directly from a trail address, but most of its value came from elsewhere, so it did not join the trail.",
+    "exposure": "direct"
+   }
+  ]
+ }
+}

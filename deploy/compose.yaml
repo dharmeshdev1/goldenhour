@@ -1,0 +1,50 @@
+# Self-hosted Goldenhour: the tracer, the API, screening, the Guard and alerts in one service, with
+# PostgreSQL for storage. Start with:  docker compose -f deploy/compose.yaml up -d
+services:
+  goldenhour:
+    image: ${GOLDENHOUR_IMAGE:-ghcr.io/dharmeshdev1/goldenhour:latest}
+    build: ..
+    command: ["serve", "--host", "0.0.0.0", "--port", "8080", "--notify", "/config/notify.yaml"]
+    environment:
+      GOLDENHOUR_DATABASE_URL: postgresql+psycopg://goldenhour:${POSTGRES_PASSWORD:-goldenhour}@postgres:5432/goldenhour
+      GOLDENHOUR_STATE: /data
+      ETHERSCAN_API_KEY: ${ETHERSCAN_API_KEY:-}
+      TRONGRID_API_KEY: ${TRONGRID_API_KEY:-}
+    volumes:
+      - goldenhour-data:/data
+      # Your copy of notify.example.yaml (see docs/self-hosting.md). Without it, no alerts are sent.
+      - ./notify.yaml:/config/notify.yaml:ro
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    read_only: true
+    tmpfs: ["/tmp"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17@sha256:ff87138949ad9a46f32ff23bd6852b52ce024a13dffe9b4087be98292cdd3b4f  # 17, pinned by digest
+    environment:
+      POSTGRES_USER: goldenhour
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-goldenhour}
+      POSTGRES_DB: goldenhour
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U goldenhour"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  goldenhour-data:
+  postgres-data:

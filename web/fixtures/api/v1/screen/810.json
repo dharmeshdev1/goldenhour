@@ -1,0 +1,53 @@
+{
+ "v": 2,
+ "entries": {
+  "8105e0cf86c25c7e1101119e3a94125c8b8162bf6ce86e185e288644adae0e0a": [
+   {
+    "node": "bitcoin:bc1qu3twtkyw2x666hn0ahqqph8rhc3njqqyr9g3h8",
+    "chain": "bitcoin",
+    "address": "bc1qu3twtkyw2x666hn0ahqqph8rhc3njqqyr9g3h8",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 3,
+    "received_usd": 110277991.96,
+    "held_usd": 81597019.06,
+    "first_ts": 1793388670,
+    "reason": "73% of the value it ever received came from trail addresses (hop 3).",
+    "exposure": "trail"
+   }
+  ],
+  "81066dc0841cf86e8ee6b0cb851a9bdb2329949622962ba1ec3da28d69f7fcb8": [
+   {
+    "node": "tron:TEpLPXpMQFjUTSMQzqMrUyrso5sRLvQhXm",
+    "chain": "tron",
+    "address": "TEpLPXpMQFjUTSMQzqMrUyrso5sRLvQhXm",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 4,
+    "received_usd": 152643.7,
+    "held_usd": 105326.38,
+    "first_ts": 1793623172,
+    "reason": "88% of the value it ever received came from trail addresses (hop 4).",
+    "exposure": "trail"
+   }
+  ],
+  "8101901c93336ebeb37111ed4c91ab1d599e355da3e272e6ef6a20480ceee27e": [
+   {
+    "node": "ethereum:0x84829b0faa6d3d35157fbe57628313f94a669d13",
+    "chain": "ethereum",
+    "address": "0x84829b0faa6d3d35157fbe57628313f94a669d13",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 10,
+    "received_usd": 114514.99,
+    "held_usd": 78633.8,
+    "first_ts": 1793478950,
+    "reason": "93% of the value it ever received came from trail addresses (hop 10).",
+    "exposure": "trail"
+   }
+  ]
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "v": 2,
+ "entries": {
+  "ba3fe5a829e6059fbf8b7c886caafa8cfc5865bdaf6e6496d1b068f509ced2b1": [
+   {
+    "node": "bitcoin:bc1qgmxuzwztkj38uvpsr4r3aavym7h2v8knhxtsmn",
+    "chain": "bitcoin",
+    "address": "bc1qgmxuzwztkj38uvpsr4r3aavym7h2v8knhxtsmn",
+    "role": "service",
+    "category": "mixer",
+    "label": "Wasabi coinjoin coordinator",
+    "hop": 3,
+    "received_usd": 152780400,
+    "held_usd": 0,
+    "first_ts": 1793396396,
+    "reason": "A mixer service that received value directly from the trail. The trail stops here.",
+    "exposure": "direct"
+   }
+  ],
+  "ba351da293c91b44d3218b8cba10733a43d594f9bbd4ec2b34c65ecede51bcec": [
+   {
+    "node": "tron:TBXxcyHbrTuAToFFM6L9KJ4a9YnUm7CKN7",
+    "chain": "tron",
+    "address": "TBXxcyHbrTuAToFFM6L9KJ4a9YnUm7CKN7",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 8,
+    "received_usd": 108607.41,
+    "held_usd": 56518.04,
+    "first_ts": 1793781880,
+    "reason": "84% of the value it ever received came from trail addresses (hop 8).",
+    "exposure": "trail"
+   }
+  ]
+ }
+}

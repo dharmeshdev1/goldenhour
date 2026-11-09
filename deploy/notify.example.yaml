@@ -1,0 +1,16 @@
+# Alert channels. Each one receives movements of the stolen money at or above `min_usd`, of the
+# listed kinds (move, swap, bridge, exit, mix, freeze). Remove the channels you do not use.
+channels:
+  - kind: webhook
+    url: https://example.internal/goldenhour
+    # Requests carry X-Goldenhour-Timestamp and X-Goldenhour-Signature: sha256=HMAC(secret, timestamp + "." + body)
+    secret: change-me
+    min_usd: 100000
+  - kind: slack
+    url: https://hooks.slack.com/services/REPLACE/ME/PLEASE
+    min_usd: 1000000
+    kinds: [bridge, exit, mix, freeze]
+  - kind: pagerduty
+    routing_key: REPLACE_ME
+    min_usd: 10000000
+    kinds: [exit, mix]

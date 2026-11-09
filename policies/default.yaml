@@ -1,0 +1,153 @@
+# Goldenhour Guard: the default policy.
+#
+# Guard decodes every signing request into explicit actions and checks them against the rules
+# below. Each rule has a stable id and a severity. A deny is final. A hold waits until a quorum of
+# the approvers listed at the end signs the request digest. Deny beats hold, and hold beats allow.
+#
+# Two checks are built in and cannot be configured: known-wallet denies a request for any wallet
+# not listed under `wallets`, and well-formed denies a request Guard cannot fully decode.
+#
+# Every rule must appear in this file. To turn one off, set `enabled: false` where reviewers can
+# see it. Quote every address and key: YAML reads an unquoted 0x value as a number.
+#
+# This file is safe to deploy as it stands, because it fails closed: with no wallets listed every
+# request is denied, and with no approvers listed no hold is ever released.
+
+version: 1
+name: default
+
+# The custody wallets Guard signs for. `role` is a free-form word that rules can target, and
+# max_per_tx_usd and velocity_limit_usd, when set, override the rule limits for that one wallet.
+wallets: []
+#  - address: "0x..."
+#    label: hot-1
+#    role: hot
+
+# Assets Guard can value in USD. The caller supplies prices in the request context, keyed by
+# symbol. Guard uses the higher of that price and `price_floor_usd`, so a compromised caller cannot
+# price an asset near zero to slip under the USD limits. A transfer of an asset that is not listed
+# here cannot be valued, and the USD rules hold it.
+assets:
+  - chain_id: 1
+    address: native
+    symbol: ETH
+    decimals: 18
+    price_floor_usd: 1000
+  - chain_id: 1
+    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    symbol: USDC
+    decimals: 6
+    price_floor_usd: 0.9
+  - chain_id: 1
+    address: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    symbol: USDT
+    decimals: 6
+    price_floor_usd: 0.9
+
+rules:
+  # Custody wallets never authorize EIP-7702 delegations. A delegation makes every call to the
+  # wallet run another contract's code with the wallet's balance and permissions, and it lives
+  # on-chain: suspending withdrawals does not stop it, only an on-chain revocation does. Guard
+  # denies delegations in type 4 transactions and in bare authorization messages alike. Revoking a
+  # delegation, which is an authorization of the zero address, is always allowed.
+  no-eip7702-delegation:
+    severity: deny
+
+  # No delegatecall, except to the targets listed. A delegatecall runs the target's code inside
+  # the wallet, with the wallet's storage and funds. That is how Bybit's Safe was rewritten in
+  # February 2025. Safe's MultiSendCallOnly is safe to allow because it refuses to delegatecall
+  # onward, so every call in its batch is decoded and checked on its own. These are its official
+  # Ethereum deployments for Safe 1.3.0 (canonical and EIP-155) and Safe 1.4.1.
+  no-delegatecall:
+    severity: deny
+    allow_targets:
+      - address: "0x40A2aCCbd92BCA938b02010E17A5b8929b49130D"
+        label: Safe MultiSendCallOnly 1.3.0
+      - address: "0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B"
+        label: Safe MultiSendCallOnly 1.3.0 (EIP-155)
+      - address: "0x9641d764fc13c8B624c04430C7356C1C7C8102e2"
+        label: Safe MultiSendCallOnly 1.4.1
+
+  # No blind signing. A message that is exactly a 32-byte hash (as raw bytes or as hex text), or a
+  # Safe approveHash call, approves whatever the hash stands for without showing it. A Safe accepts
+  # an owner's signature of such a message (with 4 added to v) as approval of the Safe transaction
+  # with that hash, so a blind hash is how a Safe transaction can be approved unread.
+  no-blind-signing:
+    severity: deny
+
+  # Implementation upgrades (upgradeTo, upgradeToAndCall, changeMasterCopy, and a ProxyAdmin's
+  # upgrade and upgradeAndCall), handing over a contract's admin or ownership (changeAdmin,
+  # changeProxyAdmin, transferOwnership), and changes to who controls a Safe (owners, threshold,
+  # modules, guard, fallback handler) are held for quorum inside a scheduled change window and get
+  # `severity` outside one. A module can move funds without owner signatures, so enabling one counts
+  # as an owner change.
+  no-upgrade-or-owner-change:
+    severity: deny
+    change_windows: []
+    #  - start: "2026-11-10T14:00:00Z"
+    #    end: "2026-11-10T16:00:00Z"
+    #    reason: rotate the treasury signers
+
+  # No unlimited approvals. An allowance at or above `threshold`, setApprovalForAll, or a DAI-style
+  # permit (which can only grant everything) outlives the transaction that needed it. The threshold is 2^96 - 1: Compound's COMP and Uniswap's UNI
+  # treat that value as infinite, Permit2 uses 2^160 - 1 and most tokens 2^256 - 1, so all of
+  # them are caught.
+  no-unlimited-approval:
+    severity: deny
+    threshold: 79228162514264337593543950335
+
+  # Approvals and permits (ERC-20 approve and increaseAllowance, setApprovalForAll, EIP-2612 and
+  # DAI permits, Permit2 approve, allowances and transfers) may only name a spender listed here.
+  # Revoking an approval is always allowed. approve(spender, 0) counts as a revocation only on a
+  # token listed under `assets` or for the zero address as spender: on an ERC-721 contract the same
+  # call approves the NFT with id 0.
+  approval-allowlist:
+    severity: deny
+    spenders: []
+
+  # Every outbound transfer must match an unused, unexpired withdrawal intent from the ledger: the
+  # same wallet, chain, asset and destination, for at most the intent's amount. An intent pays one
+  # transfer and is consumed when the request is allowed. A signed EIP-3009 authorization (USDC's
+  # transferWithAuthorization and receiveWithAuthorization) is a transfer like any other. A Safe gas
+  # refund is a payment that no intent covers, so it is refused as well.
+  intent-required:
+    severity: deny
+
+  # A rolling USD limit per wallet: what the wallet sent in the last `window`, plus this request,
+  # may not exceed `limit_usd` (or the wallet's own velocity_limit_usd). The ledger checks the limit
+  # again when it records an allowed request, so two requests decided at the same moment cannot
+  # both spend the last of it.
+  velocity:
+    severity: hold
+    window: 24h
+    limit_usd: 2000000
+
+  # A USD limit on what one request may send from one wallet (or the wallet's own max_per_tx_usd).
+  max-per-tx:
+    severity: hold
+    limit_usd: 250000
+
+  # Wallets with one of these roles may only pay a destination listed here or another wallet in
+  # this policy. A new destination waits for approvers.
+  destination-allowlist:
+    severity: hold
+    roles: [treasury]
+    destinations: []
+
+  # Guard must be able to explain what it signs. A call it does not decode, a contract deployment,
+  # typed data it does not recognize and a free-form message are all held, unless the contract is
+  # listed here. An entry trusts every function of its contract unless `functions` names some, as
+  # selectors or signatures. Typed data is trusted only for entries without `functions`.
+  explainable:
+    severity: hold
+    contracts: []
+
+# A held request is allowed once `threshold` distinct approvers listed here have signed its
+# request digest with their Ed25519 keys (goldenhour guard approve). Unknown approvers, invalid
+# signatures and a second approval from the same approver do not count. A quorum never overrides
+# a deny. Generate each key with goldenhour guard keygen, on the approver's own machine.
+quorum:
+  threshold: 2
+  approvers: []
+  #  - id: alice
+  #    public_key: "the 64 hex digits that keygen prints"

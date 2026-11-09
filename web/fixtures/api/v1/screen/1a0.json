@@ -1,0 +1,53 @@
+{
+ "v": 2,
+ "entries": {
+  "1a0eceee81b02f3b3587d4696fefd9e78996169e590c067e01bcbeb1e0e17a5a": [
+   {
+    "node": "bitcoin:bc1qdlnhg5l5tadhmcuzc4q0ymykqvg4y82fk94g9u",
+    "chain": "bitcoin",
+    "address": "bc1qdlnhg5l5tadhmcuzc4q0ymykqvg4y82fk94g9u",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 7,
+    "received_usd": 60992112.77,
+    "held_usd": 39076649.49,
+    "first_ts": 1793351410,
+    "reason": "93% of the value it ever received came from trail addresses (hop 7).",
+    "exposure": "trail"
+   }
+  ],
+  "1a0d1197d86503c59b3472f6af00512fdf1fa57a1113060144ba22fe774399a0": [
+   {
+    "node": "ethereum:0x32c679b0e898883236d7c8f918a42a2d9acbcc4e",
+    "chain": "ethereum",
+    "address": "0x32c679b0e898883236d7c8f918a42a2d9acbcc4e",
+    "role": "counterparty",
+    "category": "unknown",
+    "label": "",
+    "hop": 6,
+    "received_usd": 14553.73,
+    "held_usd": 1923.06,
+    "first_ts": 1793946494,
+    "reason": "Received value directly from a trail address, but most of its value came from elsewhere, so it did not join the trail.",
+    "exposure": "direct"
+   }
+  ],
+  "1a0b6827e447563aecb8089aeeaa3d31607b6d6bf3d49b58acc6f7f3d1a5f933": [
+   {
+    "node": "ethereum:0xd662b6b0b78ab11d57eecbe5b522216fe2343c1c",
+    "chain": "ethereum",
+    "address": "0xd662b6b0b78ab11d57eecbe5b522216fe2343c1c",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 8,
+    "received_usd": 65699.78,
+    "held_usd": 12275.88,
+    "first_ts": 1793357808,
+    "reason": "96% of the value it ever received came from trail addresses (hop 8).",
+    "exposure": "trail"
+   }
+  ]
+ }
+}

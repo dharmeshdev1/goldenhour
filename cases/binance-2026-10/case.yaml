@@ -1,0 +1,147 @@
+id: binance-2026-10
+title: "Binance, 29 October 2026"
+victim: Binance
+attribution: "TraderTraitor (North Korea), per the FBI alert of 31 October 2026"
+
+# The theft ran from 20:05 to 23:56 UTC on 29 October. The window opens an hour early so that
+# preparation (test transfers, the EIP-7702 delegations) is inside it, and closes when Binance
+# revoked the delegations at 00:10 UTC on 30 October.
+window:
+  start: 2026-10-29T19:00:00Z
+  end: 2026-10-30T00:10:00Z
+
+seed_files:
+  - seeds-fbi-2026-10-31.txt
+
+# First hops on chains the FBI list does not cover, each found and verified from chain data.
+extra_seeds:
+  - chain: xrpl
+    address: rK21t6nGLy4MNDqhvy3pGwcLFy25qgfzMx
+    reason: "received 233,461,943.1 XRP from five Binance hot wallets between 20:05:00 and 20:09:20 UTC"
+    evidence:
+      - 78E31E7BB06ADABE2322FDD0553533873C1D90664AEDE0C12DE06208F50BFA6A
+      - 6DDF398B6950B34057A7B817E761A1E2A1C59ECAFD594536C54AA6963C5B7E67
+      - 9FE8F79876B30E24843031CBE89EA75496FE75BD2F0B9779D91D55BEE52C6AAA
+      - 27C7D0D5EDAD05B5F8C7616DF6CB64C872DD22DED8697B380824A8C5B8D385F5
+      - 0571C4D9703DECA7D03B8D63E9EEB2AB0E8E6D949150A7355519AEEE9A595DB0
+  - chain: ethereum
+    address: "0xa97bf7836f8a08f9ed91d41453d371493fae8d10"
+    reason: "received what the attacker's executor swept out of Binance 14 between 22:39:35 and 23:56:47 UTC, the end of the theft"
+    evidence:
+      - "0x4a4aed833556814c16fe176fc8abc70ce124eadc73da3bcdf42a67ef44f9ad6b"
+      - "0x4395d51dc3f3c51230329efc3548f74edbced353ff3f795c517cc57fa650f89b"
+  - chain: bitcoin
+    address: bc1q0mtc2f5agpkvlq6hhahmfr3hlr55kyfjhl2mnm
+    reason: "received 18,270.2 BTC from a Binance wallet in block 973,732 (20:20:06 UTC) and split it into the 19 FBI-listed addresses in the same block"
+    evidence:
+      - 82c0b6f2172537bc13bbaa4d34e63dc95c6d056a12e992d6499fa51242df04ce
+      - 3b1d3ded49c382e80dd45057e316a5fe4318bcc1473183070715a1de1c432b32
+  - chain: tron
+    address: TG5iBMQPrDzJJAUM8GMVBf1hRaJ1wvzsGi
+    reason: "received 46,394,098 TRX (20:20:00 and 20:21:12 UTC) and 612,729,468 USDT (20:22:45 UTC) from a Binance Tron hot wallet; Tether froze it at 21:09:12 UTC"
+
+# Wallets that belong to the victim. Each one paid a first hop or a seed inside the window.
+# XRP Ledger labels are XRPScan's. The Tron and Bitcoin wallets have no public label available
+# without an API key; each is identified by the theft transfers themselves and by its scale.
+victim_wallets:
+  - {chain: xrpl, address: rDAE53VfMvftPB4ogpWGWvzkQxfht6JPxr, label: "Binance 6 (XRP Ledger)"}
+  - {chain: xrpl, address: rBtttd61FExHC68vsZ8dqmS3DfjFEceA1A, label: "Binance 9 (XRP Ledger)"}
+  - {chain: xrpl, address: rfQ9EcLkU6WnNmkS3EwUkFeXeN47Rk8Cvi, label: "Binance 18 (XRP Ledger)"}
+  - {chain: xrpl, address: rarG6FaeYhnzSKSS5EEPofo4gFsPn2bZKk, label: "Binance 15 (XRP Ledger)"}
+  - {chain: xrpl, address: rNU4eAowPuixS5ZCWaRL72UUeKgxcKExpK, label: "Binance 10 (XRP Ledger)"}
+  - {chain: tron, address: TDqSquXBgUCLYvYC4XZgrprLK589dkhSCf, label: "Binance (Tron hot wallet)"}
+  # Ethereum. Binance 14 and Binance 16 are long-standing public labels. The third wallet paid the
+  # first hop all 823 million stolen USDC; Circle froze it, as both Tether and Circle froze Binance 14.
+  - {chain: ethereum, address: "0x28c6c06298d514db089934071355e5743bf21d60", label: "Binance 14"}
+  - {chain: ethereum, address: "0xdfd5293d8e347dfe59e90efd55b2956a1343963d", label: "Binance 16"}
+  - {chain: ethereum, address: "0xee7ae85f2fe2239e27d9c1e23fffe168d63b4055", label: "Binance (USDC hot wallet)"}
+  # Solana: paid the FBI-listed Solana address 970,521.9 SOL in five transfers from 20:10:18 UTC; it
+  # has thousands of transactions, an exchange-scale wallet.
+  - {chain: solana, address: 5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9, label: "Binance (Solana hot wallet)"}
+  # 2.37 million transactions: an exchange-scale wallet. It paid the first hop all 18,270.2 BTC.
+  - {chain: bitcoin, address: bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h, label: "Binance (Bitcoin wallet)"}
+
+reported:
+  stolen_usd: 6430000000
+  stolen_usd_source: "Elliptic, 3 November 2026 (Binance put affected user funds at 6.34 billion)"
+  frozen_usd: 2850000000
+  frozen_usd_source: "Elliptic, 6 November 2026, frozen or seized"
+  chains: 11
+
+timeline:
+  - at: "2026-06"
+    what: "A Wallet DevOps engineer installs a tampered Homebrew package, found through a search ad while looking for an AI coding tool."
+    source: binance-report
+  - at: "2026-09"
+    what: "A second engineer runs an interview 'assignment' from a fake recruiter. It replaces pyenv in the Homebrew directory with a backdoor."
+    source: binance-report
+  - at: "2026-10-20"
+    what: "Through the second engineer's machine and an internal AI tool, the attacker takes over two more engineers' computers and finds a token with container deployment rights."
+    source: binance-report
+  - at: "2026-10-29T13:51:35Z"
+    what: "Rehearsal. The attacker's executor account delegates two of its own test wallets with EIP-7702."
+    source: chain
+    tx: "0x16b5acc35a82d194aadb21a4a56d666310fe83982c387c974f4796275f499dca"
+  - at: "2026-10-29T15:59:11Z"
+    what: "The executor deploys the sweeper contract that Binance 14 will later be delegated to."
+    source: chain
+    tx: "0x97408e7562eb2b28efcd24ba01609607b5749bc89448d007fa8b50ecf290329c"
+  - at: "2026-10-29T16:20:47Z"
+    what: "Second rehearsal: a test wallet is delegated to the same sweeper contract, twice."
+    source: chain
+    tx: "0xb2148eb825cac75efe0ae7fb5c319e6b66df62631738ba252185960e50dc5782"
+  - at: "2026-10-29"
+    what: "Hours before the drain, a container deployed with stolen credentials reaches the wallet signing service. It signs what the attacker asks, including 50 EIP-7702 delegations."
+    source: tangem
+  - at: "2026-10-29T20:05:00Z"
+    what: "The drain begins on the XRP Ledger: 233.46 million XRP leave five hot wallets in four minutes."
+    source: tangem
+  - at: "2026-10-29T20:10:18Z"
+    what: "Solana: 970,521.9 SOL leave a Binance wallet for one address, in five transfers."
+    source: chain
+  - at: "2026-10-29T20:20:00Z"
+    what: "Tron: 10,000 TRX leave a Binance wallet for one address, a test; 46.4 million TRX follow at 20:21:12 and 612.7 million USDT at 20:22:45."
+    source: chain
+  - at: "2026-10-29T20:20:06Z"
+    what: "Bitcoin: 18,270.2 BTC leave a Binance wallet for one address, which splits it into the 19 FBI-listed addresses in the same block."
+    source: chain
+  - at: "2026-10-29T20:20:59Z"
+    what: "One transaction installs the delegation on Binance 14: 50 EIP-7702 authorizations, all signed for that wallet, for 50 consecutive nonces, so one would be valid whenever it landed. Nonce 18,914,809 was. From here, the attacker's contract runs as the wallet's own code."
+    source: chain
+    tx: "0xad99264d5532ae0dd04b2004eebda05f25657e70dacb764f7ac8d4ccd051298b"
+  - at: "2026-10-29T20:41:23Z"
+    what: "823 million USDC leave a second Binance wallet in a call made to Binance 14: the delegated code spends an allowance that wallet had granted Binance 14. Once a hot wallet runs attacker code, every approval granted to it is a way out."
+    source: chain
+    tx: "0xdc102dd89dded5a83f1008906883ffb7c81ff3b7d7965d8c7277d170b5e17481"
+  - at: "2026-10-29T21:01:35Z"
+    what: "Tether freezes the first trail addresses on Ethereum, 37 minutes after the stolen USDT arrived. 434 million USDT had already been swapped for ETH."
+    source: elliptic
+  - at: "2026-10-29T23:56:00Z"
+    what: "The last transfer, 2,961.9 ETH. The delegations had kept working after withdrawals were suspended."
+    source: thoropass
+  - at: "2026-10-30T00:10:00Z"
+    what: "Binance revokes the EIP-7702 delegations."
+    source: thoropass
+  - at: "2026-10-31"
+    what: "The FBI attributes the theft to TraderTraitor and publishes 628 addresses."
+    source: fbi
+
+sources:
+  - id: fbi
+    title: "FBI: North Korea Responsible for $6 Billion+ Binance Attack (31 October 2026)"
+    url: "https://www.fbi.gov/investigate/cyber/alerts/2026/north-korea-responsible-for-6-billion-binance-attack"
+  - id: binance-report
+    title: "Binance: 29 October Binance Security Incident, Initial Findings and Response Update"
+    url: "https://x.com/binance/status/2117626126214504729"
+  - id: elliptic
+    title: "Elliptic: How North Korea is laundering the $6.4 billion stolen from Binance"
+    url: "https://www.elliptic.co/insights/how-north-korea-is-laundering-the-6-4-billion-stolen-from-binance"
+  - id: thoropass
+    title: "Thoropass: Binance Breach Explained"
+    url: "https://www.thoropass.com/blog/binance-breach-2026"
+  - id: tangem
+    title: "Tangem: Binance Hack 2026, How Attackers Stole $6.34B"
+    url: "https://tangem.com/en/blog/post/binance-hack-2026-how-it-happened/"
+  - id: cnbc
+    title: "CNBC: Binance co-CEO says hackers used fake job interviews and an AI tool"
+    url: "https://www.cnbc.com/2026/11/03/binance-co-ceo-teng-says-hackers-used-fake-job-interviews-to-steal-6point3-billion-in-crypto.html"

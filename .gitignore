@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+dist/
+build/
+*.egg-info/
+
+# Local state and outputs
+state/
+site/
+*.db
+*.db-wal
+*.db-shm
+
+# Web
+web/node_modules/
+web/.next/
+web/out/
+web/public/api/
+web/tsconfig.tsbuildinfo
+
+# OS and editors
+.DS_Store
+.idea/
+.vscode/

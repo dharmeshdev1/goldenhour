@@ -1,0 +1,594 @@
+{
+ "generated_at": "2026-11-07T08:55:00Z",
+ "data_through": "2026-11-07T08:50:00Z",
+ "last_movement_at": "2026-11-07T08:48:00Z",
+ "stolen": {
+  "usd_at_theft": 6412059000,
+  "reported_usd": 6430000000,
+  "by_chain": [
+   {
+    "chain": "ethereum",
+    "usd": 2871292000
+   },
+   {
+    "chain": "bitcoin",
+    "usd": 1726515000
+   },
+   {
+    "chain": "tron",
+    "usd": 746000000
+   },
+   {
+    "chain": "xrpl",
+    "usd": 699266000
+   },
+   {
+    "chain": "solana",
+    "usd": 147300000
+   },
+   {
+    "chain": "base",
+    "usd": 108130000
+   },
+   {
+    "chain": "arbitrum",
+    "usd": 88208000
+   },
+   {
+    "chain": "avalanche",
+    "usd": 10400000
+   },
+   {
+    "chain": "optimism",
+    "usd": 6498000
+   },
+   {
+    "chain": "polygon",
+    "usd": 5040000
+   },
+   {
+    "chain": "near",
+    "usd": 3410000
+   }
+  ],
+  "by_asset": [
+   {
+    "symbol": "BTC",
+    "chain": "bitcoin",
+    "amount": 18270,
+    "usd": 1726515000
+   },
+   {
+    "symbol": "USDT",
+    "chain": "ethereum",
+    "amount": 1180000000,
+    "usd": 1180000000
+   },
+   {
+    "symbol": "USDC",
+    "chain": "ethereum",
+    "amount": 640000000,
+    "usd": 640000000
+   },
+   {
+    "symbol": "USDT",
+    "chain": "tron",
+    "amount": 620000000,
+    "usd": 620000000
+   },
+   {
+    "symbol": "FDUSD",
+    "chain": "ethereum",
+    "amount": 512000000,
+    "usd": 512000000
+   },
+   {
+    "symbol": "XRP",
+    "chain": "xrpl",
+    "amount": 233460000,
+    "usd": 490266000
+   },
+   {
+    "symbol": "ETH",
+    "chain": "ethereum",
+    "amount": 122600,
+    "usd": 419292000
+   },
+   {
+    "symbol": "RLUSD",
+    "chain": "xrpl",
+    "amount": 209000000,
+    "usd": 209000000
+   },
+   {
+    "symbol": "TRX",
+    "chain": "tron",
+    "amount": 420000000,
+    "usd": 126000000
+   },
+   {
+    "symbol": "USDP",
+    "chain": "ethereum",
+    "amount": 120000000,
+    "usd": 120000000
+   },
+   {
+    "symbol": "USDC",
+    "chain": "base",
+    "amount": 103000000,
+    "usd": 103000000
+   },
+   {
+    "symbol": "USDC",
+    "chain": "arbitrum",
+    "amount": 80000000,
+    "usd": 80000000
+   },
+   {
+    "symbol": "PYUSD",
+    "chain": "solana",
+    "amount": 62000000,
+    "usd": 62000000
+   },
+   {
+    "symbol": "USDT",
+    "chain": "solana",
+    "amount": 52000000,
+    "usd": 52000000
+   },
+   {
+    "symbol": "SOL",
+    "chain": "solana",
+    "amount": 180000,
+    "usd": 33300000
+   },
+   {
+    "symbol": "AVAX",
+    "chain": "avalanche",
+    "amount": 400000,
+    "usd": 10400000
+   },
+   {
+    "symbol": "ETH",
+    "chain": "arbitrum",
+    "amount": 2400,
+    "usd": 8208000
+   },
+   {
+    "symbol": "ETH",
+    "chain": "optimism",
+    "amount": 1900,
+    "usd": 6498000
+   },
+   {
+    "symbol": "ETH",
+    "chain": "base",
+    "amount": 1500,
+    "usd": 5130000
+   },
+   {
+    "symbol": "POL",
+    "chain": "polygon",
+    "amount": 12000000,
+    "usd": 5040000
+   },
+   {
+    "symbol": "NEAR",
+    "chain": "near",
+    "amount": 1100000,
+    "usd": 3410000
+   }
+  ],
+  "transfers": 575,
+  "victim_wallets": 28,
+  "first_at": "2026-10-29T20:05:04Z",
+  "last_at": "2026-10-29T23:56:12Z"
+ },
+ "now": {
+  "held": {
+   "usd": 2192608485,
+   "addresses": 8562,
+   "by_chain": [
+    {
+     "chain": "bitcoin",
+     "usd": 1520803386,
+     "addresses": 418
+    },
+    {
+     "chain": "xrpl",
+     "usd": 327303486,
+     "addresses": 71
+    },
+    {
+     "chain": "tron",
+     "usd": 186470000,
+     "addresses": 7742
+    },
+    {
+     "chain": "ethereum",
+     "usd": 75920760,
+     "addresses": 241
+    },
+    {
+     "chain": "solana",
+     "usd": 46901622,
+     "addresses": 46
+    },
+    {
+     "chain": "avalanche",
+     "usd": 8489231,
+     "addresses": 12
+    },
+    {
+     "chain": "arbitrum",
+     "usd": 7800000,
+     "addresses": 9
+    },
+    {
+     "chain": "optimism",
+     "usd": 6175000,
+     "addresses": 6
+    },
+    {
+     "chain": "base",
+     "usd": 4875000,
+     "addresses": 5
+    },
+    {
+     "chain": "polygon",
+     "usd": 4680000,
+     "addresses": 8
+    },
+    {
+     "chain": "near",
+     "usd": 3190000,
+     "addresses": 4
+    }
+   ],
+   "by_asset": [
+    {
+     "symbol": "BTC",
+     "chain": "bitcoin",
+     "amount": 16935.45,
+     "usd": 1520803386
+    },
+    {
+     "symbol": "XRP",
+     "chain": "xrpl",
+     "amount": 162031428.57,
+     "usd": 327303486
+    },
+    {
+     "symbol": "TRX",
+     "chain": "tron",
+     "amount": 643000000,
+     "usd": 186470000
+    },
+    {
+     "symbol": "ETH",
+     "chain": "ethereum",
+     "amount": 23360.23,
+     "usd": 75920760
+    },
+    {
+     "symbol": "SOL",
+     "chain": "solana",
+     "amount": 266486.49,
+     "usd": 46901622
+    },
+    {
+     "symbol": "AVAX",
+     "chain": "avalanche",
+     "amount": 342307.69,
+     "usd": 8489231
+    },
+    {
+     "symbol": "ETH",
+     "chain": "arbitrum",
+     "amount": 2400,
+     "usd": 7800000
+    },
+    {
+     "symbol": "ETH",
+     "chain": "optimism",
+     "amount": 1900,
+     "usd": 6175000
+    },
+    {
+     "symbol": "ETH",
+     "chain": "base",
+     "amount": 1500,
+     "usd": 4875000
+    },
+    {
+     "symbol": "POL",
+     "chain": "polygon",
+     "amount": 12000000,
+     "usd": 4680000
+    },
+    {
+     "symbol": "NEAR",
+     "chain": "near",
+     "amount": 1100000,
+     "usd": 3190000
+    }
+   ]
+  },
+  "frozen": {
+   "usd": 2795100000,
+   "by_issuer": [
+    {
+     "issuer": "Tether",
+     "chain": "ethereum",
+     "symbol": "USDT",
+     "amount": 746000000,
+     "usd": 746000000,
+     "addresses": 14,
+     "first_at": "2026-10-29T21:02:00Z"
+    },
+    {
+     "issuer": "Circle",
+     "chain": "ethereum",
+     "symbol": "USDC",
+     "amount": 640000000,
+     "usd": 640000000,
+     "addresses": 11,
+     "first_at": "2026-10-29T20:51:00Z"
+    },
+    {
+     "issuer": "First Digital",
+     "chain": "ethereum",
+     "symbol": "FDUSD",
+     "amount": 512000000,
+     "usd": 512000000,
+     "addresses": 6,
+     "first_at": "2026-10-29T22:30:00Z"
+    },
+    {
+     "issuer": "Tether",
+     "chain": "tron",
+     "symbol": "USDT",
+     "amount": 355100000,
+     "usd": 355100000,
+     "addresses": 8,
+     "first_at": "2026-10-29T21:40:00Z"
+    },
+    {
+     "issuer": "Ripple",
+     "chain": "xrpl",
+     "symbol": "RLUSD",
+     "amount": 177000000,
+     "usd": 177000000,
+     "addresses": 2,
+     "first_at": "2026-10-29T21:20:00Z"
+    },
+    {
+     "issuer": "Paxos",
+     "chain": "ethereum",
+     "symbol": "USDP",
+     "amount": 120000000,
+     "usd": 120000000,
+     "addresses": 3,
+     "first_at": "2026-10-30T01:15:00Z"
+    },
+    {
+     "issuer": "Circle",
+     "chain": "base",
+     "symbol": "USDC",
+     "amount": 103000000,
+     "usd": 103000000,
+     "addresses": 2,
+     "first_at": "2026-10-29T20:58:00Z"
+    },
+    {
+     "issuer": "Circle",
+     "chain": "arbitrum",
+     "symbol": "USDC",
+     "amount": 80000000,
+     "usd": 80000000,
+     "addresses": 2,
+     "first_at": "2026-10-29T21:05:00Z"
+    },
+    {
+     "issuer": "Paxos",
+     "chain": "solana",
+     "symbol": "PYUSD",
+     "amount": 62000000,
+     "usd": 62000000,
+     "addresses": 2,
+     "first_at": "2026-10-30T02:40:00Z"
+    }
+   ]
+  },
+  "exited": {
+   "usd": 1317015000,
+   "by_category": [
+    {
+     "category": "bridge",
+     "usd": 483015000,
+     "count": 374,
+     "entities": [
+      {
+       "name": "THORChain",
+       "usd": 257115000,
+       "count": 161
+      },
+      {
+       "name": "Allbridge",
+       "usd": 140000000,
+       "count": 88
+      },
+      {
+       "name": "Wormhole",
+       "usd": 55150000,
+       "count": 34
+      },
+      {
+       "name": "deBridge",
+       "usd": 29250000,
+       "count": 18
+      },
+      {
+       "name": "Stargate",
+       "usd": 1500000,
+       "count": 1
+      }
+     ]
+    },
+    {
+     "category": "mixer",
+     "usd": 388000000,
+     "count": 311,
+     "entities": [
+      {
+       "name": "Wasabi coinjoin",
+       "usd": 164280000,
+       "count": 103
+      },
+      {
+       "name": "Railgun",
+       "usd": 132800000,
+       "count": 83
+      },
+      {
+       "name": "JoinMarket",
+       "usd": 57720000,
+       "count": 36
+      },
+      {
+       "name": "Privacy Pools",
+       "usd": 33200000,
+       "count": 21
+      }
+     ]
+    },
+    {
+     "category": "exchange",
+     "usd": 296000000,
+     "count": 244,
+     "entities": [
+      {
+       "name": "Instant exchange A",
+       "usd": 117000000,
+       "count": 73
+      },
+      {
+       "name": "Instant exchange B",
+       "usd": 81000000,
+       "count": 51
+      },
+      {
+       "name": "Exchange D",
+       "usd": 63000000,
+       "count": 39
+      },
+      {
+       "name": "OTC desk C",
+       "usd": 35000000,
+       "count": 22
+      }
+     ]
+    },
+    {
+     "category": "dex",
+     "usd": 68000000,
+     "count": 75,
+     "entities": [
+      {
+       "name": "Uniswap",
+       "usd": 26000000,
+       "count": 16
+      },
+      {
+       "name": "XRPL AMM",
+       "usd": 18000000,
+       "count": 11
+      },
+      {
+       "name": "Curve",
+       "usd": 14000000,
+       "count": 9
+      },
+      {
+       "name": "SunSwap",
+       "usd": 6000000,
+       "count": 4
+      },
+      {
+       "name": "Jupiter",
+       "usd": 4000000,
+       "count": 3
+      }
+     ]
+    },
+    {
+     "category": "lending",
+     "usd": 38000000,
+     "count": 56,
+     "entities": [
+      {
+       "name": "Aave",
+       "usd": 25840000,
+       "count": 16
+      },
+      {
+       "name": "Compound",
+       "usd": 12160000,
+       "count": 8
+      }
+     ]
+    },
+    {
+     "category": "staking",
+     "usd": 22000000,
+     "count": 41,
+     "entities": [
+      {
+       "name": "Lido",
+       "usd": 22000000,
+       "count": 14
+      }
+     ]
+    },
+    {
+     "category": "other",
+     "usd": 22000000,
+     "count": 21,
+     "entities": [
+      {
+       "name": "Unlabeled contracts",
+       "usd": 22000000,
+       "count": 14
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "converted": {
+  "to_btc": {
+   "btc": 3284.6,
+   "usd": 310400000,
+   "swaps": 1184
+  }
+ },
+ "trail": {
+  "addresses": 9214,
+  "chains": [
+   "ethereum",
+   "bitcoin",
+   "xrpl",
+   "tron",
+   "solana",
+   "base",
+   "arbitrum",
+   "optimism",
+   "polygon",
+   "avalanche",
+   "near"
+  ],
+  "max_hop": 13,
+  "transfers": 48906,
+  "services_touched": 63
+ }
+}

@@ -1,0 +1,69 @@
+{
+ "v": 2,
+ "entries": {
+  "bcd19983450e67d03e52890a72180efd7c9a60a3a52cdaaff0320eec1d29a0d4": [
+   {
+    "node": "bitcoin:3eqFMf4vXShVV1BAmK4aqf9dgYDf5wdBEG",
+    "chain": "bitcoin",
+    "address": "3eqFMf4vXShVV1BAmK4aqf9dgYDf5wdBEG",
+    "role": "seed",
+    "category": "attacker",
+    "label": "FBI list #238",
+    "hop": 1,
+    "received_usd": 182129582.12,
+    "held_usd": 106484086.17,
+    "first_ts": 1793305294,
+    "reason": "Named in the FBI alert of 31 October 2026 as holding or having held stolen assets.",
+    "exposure": "trail"
+   }
+  ],
+  "bcd78438496e5a3c6323885885c2d74efb3c9031a032e6238e542ff2b0312918": [
+   {
+    "node": "solana:jCVnG8f7REapnBpJTp5MADQ2auwrxxwpJYntDhhNafUg",
+    "chain": "solana",
+    "address": "jCVnG8f7REapnBpJTp5MADQ2auwrxxwpJYntDhhNafUg",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 11,
+    "received_usd": 105912.42,
+    "held_usd": 70173.08,
+    "first_ts": 1793413037,
+    "reason": "93% of the value it ever received came from trail addresses (hop 11).",
+    "exposure": "trail"
+   }
+  ],
+  "bcdcc0a5e1cadd44175e0eccadece78bcdf66b4c7f6a158aa3d8b29efe263970": [
+   {
+    "node": "ethereum:0x1b277ab4a4cd6aa1c7b17ae9469ab496a7689601",
+    "chain": "ethereum",
+    "address": "0x1b277ab4a4cd6aa1c7b17ae9469ab496a7689601",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 8,
+    "received_usd": 43625.87,
+    "held_usd": 16769.75,
+    "first_ts": 1793495285,
+    "reason": "77% of the value it ever received came from trail addresses (hop 8).",
+    "exposure": "trail"
+   }
+  ],
+  "bcd861a263f5fad2431ffcebc5cbd97dc15d9d483c5ab36bc054229d45ee86a2": [
+   {
+    "node": "bitcoin:bc1pmmeta8ruc9zmw42t5ytpnaxvv8fmzvspad4xmpcx7k9qnsf8sl3fvdvskz",
+    "chain": "bitcoin",
+    "address": "bc1pmmeta8ruc9zmw42t5ytpnaxvv8fmzvspad4xmpcx7k9qnsf8sl3fvdvskz",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 6,
+    "received_usd": 82365.08,
+    "held_usd": 36253.47,
+    "first_ts": 1793670544,
+    "reason": "75% of the value it ever received came from trail addresses (hop 6).",
+    "exposure": "trail"
+   }
+  ]
+ }
+}

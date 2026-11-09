@@ -1,0 +1,53 @@
+{
+ "v": 2,
+ "entries": {
+  "10856a54dab3f0cb3fca18c8d9b307dd0c81947ba1c044451b298e54c3b3db98": [
+   {
+    "node": "bitcoin:bc1q4dklkmr7a33zf8tpqtdeh9753w2htkz548xuxm",
+    "chain": "bitcoin",
+    "address": "bc1q4dklkmr7a33zf8tpqtdeh9753w2htkz548xuxm",
+    "role": "seed",
+    "category": "attacker",
+    "label": "FBI list #500",
+    "hop": 1,
+    "received_usd": 68668645.87,
+    "held_usd": 16026001.14,
+    "first_ts": 1793305368,
+    "reason": "Named in the FBI alert of 31 October 2026 as holding or having held stolen assets.",
+    "exposure": "trail"
+   }
+  ],
+  "1088287372d257dff1473dad9b4829e7b3b1d1b2361b6cf3ebbe8eb816a910ee": [
+   {
+    "node": "bitcoin:bc1qnkg7aznlgxq98wats2l8ez2a42azkskh5fngcs",
+    "chain": "bitcoin",
+    "address": "bc1qnkg7aznlgxq98wats2l8ez2a42azkskh5fngcs",
+    "role": "counterparty",
+    "category": "unknown",
+    "label": "",
+    "hop": 5,
+    "received_usd": 40119.92,
+    "held_usd": 28418.08,
+    "first_ts": 1793922712,
+    "reason": "Received value directly from a trail address, but most of its value came from elsewhere, so it did not join the trail.",
+    "exposure": "direct"
+   }
+  ],
+  "1081e2cfabb6e9d2141a3c0e86983861d26a2d10ee60cd520ef9689885168cca": [
+   {
+    "node": "solana:AU7Fh1QVZYzXJ28TJ8F3q95QvuVPwmQrTxFXGgGwWY4",
+    "chain": "solana",
+    "address": "AU7Fh1QVZYzXJ28TJ8F3q95QvuVPwmQrTxFXGgGwWY4",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 7,
+    "received_usd": 8414.9,
+    "held_usd": 7021.78,
+    "first_ts": 1793665263,
+    "reason": "89% of the value it ever received came from trail addresses (hop 7).",
+    "exposure": "trail"
+   }
+  ]
+ }
+}

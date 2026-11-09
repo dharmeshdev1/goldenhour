@@ -1,0 +1,85 @@
+{
+ "v": 2,
+ "entries": {
+  "40fbaee069ebc28c9ceb8695d294d58fc66e1d015bbfd618fca40845781ab86a": [
+   {
+    "node": "xrpl:rL5bStLo3h6m954EbEWRXZVpEH",
+    "chain": "xrpl",
+    "address": "rL5bStLo3h6m954EbEWRXZVpEH",
+    "role": "seed",
+    "category": "attacker",
+    "label": "FBI list #530",
+    "hop": 1,
+    "received_usd": 292532077.08,
+    "held_usd": 263068195.25,
+    "first_ts": 1793304398,
+    "reason": "Named in the FBI alert of 31 October 2026 as holding or having held stolen assets.",
+    "exposure": "trail"
+   }
+  ],
+  "40f797ada51f0e0ae7c5e8532a59a66380bfcb3d361fb3af45f5c514e420845a": [
+   {
+    "node": "ethereum:0x93da45ac977868cdfcc50fed772f5b510ba106fc",
+    "chain": "ethereum",
+    "address": "0x93da45ac977868cdfcc50fed772f5b510ba106fc",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 3,
+    "received_usd": 12261294.16,
+    "held_usd": 1607278.73,
+    "first_ts": 1793352527,
+    "reason": "95% of the value it ever received came from trail addresses (hop 3).",
+    "exposure": "trail"
+   }
+  ],
+  "40f5fb6579ce3fdbab0ef11d42ea8a510fb515dded7e12c8b19f0d1f72fd9e0b": [
+   {
+    "node": "ethereum:0x78f6cc54506d161c9cb0a4cd886921e656226f57",
+    "chain": "ethereum",
+    "address": "0x78f6cc54506d161c9cb0a4cd886921e656226f57",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 5,
+    "received_usd": 4889.52,
+    "held_usd": 1627.3,
+    "first_ts": 1793774207,
+    "reason": "98% of the value it ever received came from trail addresses (hop 5).",
+    "exposure": "trail"
+   }
+  ],
+  "40f8564a6a380325ea98ea4528c4954c2bed77059a34202533314f58e220be42": [
+   {
+    "node": "bitcoin:bc1qt7vvp0vlez85j8nw4mea4dmwnguwt2pudzgaug",
+    "chain": "bitcoin",
+    "address": "bc1qt7vvp0vlez85j8nw4mea4dmwnguwt2pudzgaug",
+    "role": "counterparty",
+    "category": "unknown",
+    "label": "",
+    "hop": 9,
+    "received_usd": 26878.75,
+    "held_usd": 7337.78,
+    "first_ts": 1793923449,
+    "reason": "Received value directly from a trail address, but most of its value came from elsewhere, so it did not join the trail.",
+    "exposure": "direct"
+   }
+  ],
+  "40f74ad9dc9991dca3c43381a2be0f40ff2cf2acd1df825cf1c5c06ab007f5ef": [
+   {
+    "node": "solana:xBig6nQMTG3iYbUrUL623dKBGvcnBSTQ6DSNzG39TSh",
+    "chain": "solana",
+    "address": "xBig6nQMTG3iYbUrUL623dKBGvcnBSTQ6DSNzG39TSh",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 4,
+    "received_usd": 10023.74,
+    "held_usd": 7079.21,
+    "first_ts": 1793447952,
+    "reason": "83% of the value it ever received came from trail addresses (hop 4).",
+    "exposure": "trail"
+   }
+  ]
+ }
+}

@@ -1,0 +1,69 @@
+{
+ "v": 2,
+ "entries": {
+  "bd42d33a235d60b72e2ea5db164b5d6d20a770051038973a63b2a5836b83420c": [
+   {
+    "node": "ethereum:0x90d2545e6cb7ba878303bb000f4511e45b1e9a39",
+    "chain": "ethereum",
+    "address": "0x90d2545e6cb7ba878303bb000f4511e45b1e9a39",
+    "role": "counterparty",
+    "category": "unknown",
+    "label": "OTC counterparty",
+    "hop": 6,
+    "received_usd": 1851464.89,
+    "held_usd": 757330.38,
+    "first_ts": 1793529990,
+    "reason": "Received value directly from a trail address, but most of its value came from elsewhere, so it did not join the trail.",
+    "exposure": "direct"
+   }
+  ],
+  "bd4d4b750101acb655af1fcb44d4a5eaac0c70581f010d2d8991272b8bfd4fd3": [
+   {
+    "node": "bitcoin:bc1psyagl6vzsghjzhqf7y7vwld6q3kqsdw92yx2mmesfnhljrf3r6hhchf3de",
+    "chain": "bitcoin",
+    "address": "bc1psyagl6vzsghjzhqf7y7vwld6q3kqsdw92yx2mmesfnhljrf3r6hhchf3de",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 11,
+    "received_usd": 8409.55,
+    "held_usd": 2346.93,
+    "first_ts": 1793426550,
+    "reason": "84% of the value it ever received came from trail addresses (hop 11).",
+    "exposure": "trail"
+   }
+  ],
+  "bd440020e08f46edb02de96d6f7b562782c9190546e46a94a9848434353fea3d": [
+   {
+    "node": "bitcoin:bc1q5yv9qclw52xr44fuqz66f4ewfev9vunsv4dccc",
+    "chain": "bitcoin",
+    "address": "bc1q5yv9qclw52xr44fuqz66f4ewfev9vunsv4dccc",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 6,
+    "received_usd": 18991.1,
+    "held_usd": 14330.87,
+    "first_ts": 1793602741,
+    "reason": "85% of the value it ever received came from trail addresses (hop 6).",
+    "exposure": "trail"
+   }
+  ],
+  "bd416c5b7844608e8b68a43ceca1fa92eb495569c2d9e123b39be515b5295d31": [
+   {
+    "node": "bitcoin:bc1pxd8xc0uha075e0eszt3ypacetnnfmvcujlz9x5tjmx6krda7rv4wzc8csk",
+    "chain": "bitcoin",
+    "address": "bc1pxd8xc0uha075e0eszt3ypacetnnfmvcujlz9x5tjmx6krda7rv4wzc8csk",
+    "role": "counterparty",
+    "category": "unknown",
+    "label": "",
+    "hop": 4,
+    "received_usd": 2384.5,
+    "held_usd": 1418.4,
+    "first_ts": 1793777694,
+    "reason": "Received value directly from a trail address, but most of its value came from elsewhere, so it did not join the trail.",
+    "exposure": "direct"
+   }
+  ]
+ }
+}

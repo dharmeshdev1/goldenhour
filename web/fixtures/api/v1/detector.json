@@ -1,0 +1,150 @@
+{
+ "replay": [
+  {
+   "chain": "xrpl",
+   "wallet": "rq65WD1x7vUoGFzNo5GcJE2n8jY",
+   "label": "Binance hot wallet 13",
+   "first_theft_at": "2026-10-29T20:05:04Z",
+   "first_alert_at": "2026-10-29T20:05:39Z",
+   "minutes_after_first_theft": 0.6,
+   "usd_before_alert": 61200000,
+   "rule": "drain-velocity"
+  },
+  {
+   "chain": "xrpl",
+   "wallet": "rp67aTrN3UWZLg6ZHMVsq3wAv77C43aU",
+   "label": "Binance hot wallet 14",
+   "first_theft_at": "2026-10-29T20:05:22Z",
+   "first_alert_at": "2026-10-29T20:05:51Z",
+   "minutes_after_first_theft": 0.5,
+   "usd_before_alert": 44900000,
+   "rule": "drain-velocity"
+  },
+  {
+   "chain": "ethereum",
+   "wallet": "0x6e3a032cf9698d747201cd13efe04f41a6e1b8fd",
+   "label": "Binance hot wallet 1",
+   "first_theft_at": "2026-10-29T20:20:11Z",
+   "first_alert_at": "2026-10-29T19:08:40Z",
+   "minutes_after_first_theft": -71.5,
+   "usd_before_alert": 0,
+   "rule": "delegation-change"
+  },
+  {
+   "chain": "ethereum",
+   "wallet": "0x6860c72ee60bd9e53f9fb92dc309774885a99d84",
+   "label": "Binance hot wallet 2",
+   "first_theft_at": "2026-10-29T20:20:47Z",
+   "first_alert_at": "2026-10-29T19:08:40Z",
+   "minutes_after_first_theft": -72.1,
+   "usd_before_alert": 0,
+   "rule": "delegation-change"
+  },
+  {
+   "chain": "bitcoin",
+   "wallet": "3qb6DtfH5jXe2LUtFuEpoRemsMKZLtQg14",
+   "label": "Binance hot wallet 9",
+   "first_theft_at": "2026-10-29T20:21:10Z",
+   "first_alert_at": "2026-10-29T20:22:28Z",
+   "minutes_after_first_theft": 1.3,
+   "usd_before_alert": 412000000,
+   "rule": "unknown-destination"
+  },
+  {
+   "chain": "tron",
+   "wallet": "TQc6PVTgyDbjgcMESCs5DXQUptGJkna2MF",
+   "label": "Binance hot wallet 18",
+   "first_theft_at": "2026-10-29T20:27:02Z",
+   "first_alert_at": "2026-10-29T20:27:41Z",
+   "minutes_after_first_theft": 0.7,
+   "usd_before_alert": 38400000,
+   "rule": "fan-out"
+  },
+  {
+   "chain": "solana",
+   "wallet": "Uor7GEaUDbcz8cRdDD3hBn4RLf3219EvihXVEDVZhjk",
+   "label": "Binance hot wallet 21",
+   "first_theft_at": "2026-10-29T20:40:15Z",
+   "first_alert_at": "2026-10-29T20:41:16Z",
+   "minutes_after_first_theft": 1,
+   "usd_before_alert": 12100000,
+   "rule": "drain-velocity"
+  },
+  {
+   "chain": "base",
+   "wallet": "0xcd45557322f0bd3711460c944fdb76490f3c8a46",
+   "label": "Binance hot wallet 23",
+   "first_theft_at": "2026-10-29T20:49:30Z",
+   "first_alert_at": "2026-10-29T19:08:40Z",
+   "minutes_after_first_theft": -100.8,
+   "usd_before_alert": 0,
+   "rule": "delegation-change"
+  },
+  {
+   "chain": "avalanche",
+   "wallet": "0x2f98dba54f1a3a1f5081f78f1f8f2386e8eed956",
+   "label": "Binance hot wallet 27",
+   "first_theft_at": "2026-10-29T21:10:05Z",
+   "first_alert_at": "2026-10-29T21:12:44Z",
+   "minutes_after_first_theft": 2.7,
+   "usd_before_alert": 2100000,
+   "rule": "drain-velocity"
+  },
+  {
+   "chain": "near",
+   "wallet": "0e94702fdaf614e495872aa79035ec56312515bb56099b8917f734014728e79c",
+   "label": "Binance hot wallet 28",
+   "first_theft_at": "2026-10-29T21:55:40Z",
+   "first_alert_at": null,
+   "minutes_after_first_theft": null,
+   "usd_before_alert": 3410000,
+   "rule": ""
+  }
+ ],
+ "baseline": {
+  "days": 30,
+  "wallets": 412,
+  "transactions": 1842377,
+  "alerts": 23,
+  "alerts_per_wallet_day": 0.00186
+ },
+ "unread_blocks": 0,
+ "rules": [
+  {
+   "id": "delegation-change",
+   "title": "Delegation on a custody wallet",
+   "description": "A custody wallet sets or changes an EIP-7702 delegation. Hot wallets never delegate, so any delegation is an incident.",
+   "severity": "critical"
+  },
+  {
+   "id": "post-halt-outflow",
+   "title": "Outflow after a halt",
+   "description": "Any value leaving a custody wallet after withdrawals were suspended.",
+   "severity": "critical"
+  },
+  {
+   "id": "drain-velocity",
+   "title": "Drain velocity",
+   "description": "Outflows above 20% of a wallet's balance within 10 minutes, measured against its own 30 day pattern.",
+   "severity": "critical"
+  },
+  {
+   "id": "unknown-destination",
+   "title": "Unknown destination",
+   "description": "A transfer above the wallet's usual size to an address with no withdrawal request and no history with the wallet.",
+   "severity": "high"
+  },
+  {
+   "id": "fan-out",
+   "title": "Fan-out",
+   "description": "One wallet pays more than 10 new addresses within 5 minutes.",
+   "severity": "high"
+  },
+  {
+   "id": "stablecoin-swap",
+   "title": "Stablecoin swap outside treasury hours",
+   "description": "A custody stablecoin balance is swapped on a DEX outside an approved treasury window.",
+   "severity": "medium"
+  }
+ ]
+}

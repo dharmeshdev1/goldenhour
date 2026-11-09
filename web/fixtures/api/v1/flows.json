@@ -1,0 +1,346 @@
+{
+ "nodes": [
+  {
+   "id": "victim",
+   "label": "Binance",
+   "kind": "victim"
+  },
+  {
+   "id": "chain:ethereum",
+   "label": "Ethereum",
+   "kind": "chain"
+  },
+  {
+   "id": "chain:bitcoin",
+   "label": "Bitcoin",
+   "kind": "chain"
+  },
+  {
+   "id": "chain:xrpl",
+   "label": "XRP Ledger",
+   "kind": "chain"
+  },
+  {
+   "id": "chain:tron",
+   "label": "Tron",
+   "kind": "chain"
+  },
+  {
+   "id": "chain:solana",
+   "label": "Solana",
+   "kind": "chain"
+  },
+  {
+   "id": "chain:base",
+   "label": "Base",
+   "kind": "chain"
+  },
+  {
+   "id": "chain:arbitrum",
+   "label": "Arbitrum",
+   "kind": "chain"
+  },
+  {
+   "id": "chain:optimism",
+   "label": "Optimism",
+   "kind": "chain"
+  },
+  {
+   "id": "chain:polygon",
+   "label": "Polygon",
+   "kind": "chain"
+  },
+  {
+   "id": "chain:avalanche",
+   "label": "Avalanche",
+   "kind": "chain"
+  },
+  {
+   "id": "chain:near",
+   "label": "NEAR",
+   "kind": "chain"
+  },
+  {
+   "id": "state:held",
+   "label": "Held by attacker addresses",
+   "kind": "state"
+  },
+  {
+   "id": "state:frozen",
+   "label": "Frozen by issuers",
+   "kind": "state"
+  },
+  {
+   "id": "exit:bridge",
+   "label": "Bridges",
+   "kind": "category"
+  },
+  {
+   "id": "exit:mixer",
+   "label": "Mixers and privacy pools",
+   "kind": "category"
+  },
+  {
+   "id": "exit:exchange",
+   "label": "Exchanges",
+   "kind": "category"
+  },
+  {
+   "id": "exit:dex",
+   "label": "DEX pools",
+   "kind": "category"
+  },
+  {
+   "id": "exit:lending",
+   "label": "Lending",
+   "kind": "category"
+  },
+  {
+   "id": "exit:staking",
+   "label": "Staking",
+   "kind": "category"
+  },
+  {
+   "id": "exit:other",
+   "label": "Other services",
+   "kind": "category"
+  }
+ ],
+ "links": [
+  {
+   "source": "victim",
+   "target": "chain:ethereum",
+   "usd": 2871292000
+  },
+  {
+   "source": "victim",
+   "target": "chain:bitcoin",
+   "usd": 1726515000
+  },
+  {
+   "source": "victim",
+   "target": "chain:xrpl",
+   "usd": 699266000
+  },
+  {
+   "source": "victim",
+   "target": "chain:tron",
+   "usd": 746000000
+  },
+  {
+   "source": "victim",
+   "target": "chain:solana",
+   "usd": 147300000
+  },
+  {
+   "source": "victim",
+   "target": "chain:base",
+   "usd": 108130000
+  },
+  {
+   "source": "victim",
+   "target": "chain:arbitrum",
+   "usd": 88208000
+  },
+  {
+   "source": "victim",
+   "target": "chain:optimism",
+   "usd": 6498000
+  },
+  {
+   "source": "victim",
+   "target": "chain:polygon",
+   "usd": 5040000
+  },
+  {
+   "source": "victim",
+   "target": "chain:avalanche",
+   "usd": 10400000
+  },
+  {
+   "source": "victim",
+   "target": "chain:near",
+   "usd": 3410000
+  },
+  {
+   "source": "chain:ethereum",
+   "target": "state:held",
+   "usd": 390292000
+  },
+  {
+   "source": "chain:bitcoin",
+   "target": "state:held",
+   "usd": 1290000000
+  },
+  {
+   "source": "chain:xrpl",
+   "target": "state:held",
+   "usd": 340266000
+  },
+  {
+   "source": "chain:tron",
+   "target": "state:held",
+   "usd": 192900000
+  },
+  {
+   "source": "chain:solana",
+   "target": "state:held",
+   "usd": 49300000
+  },
+  {
+   "source": "chain:base",
+   "target": "state:held",
+   "usd": 5130000
+  },
+  {
+   "source": "chain:arbitrum",
+   "target": "state:held",
+   "usd": 8208000
+  },
+  {
+   "source": "chain:optimism",
+   "target": "state:held",
+   "usd": 6498000
+  },
+  {
+   "source": "chain:polygon",
+   "target": "state:held",
+   "usd": 5040000
+  },
+  {
+   "source": "chain:avalanche",
+   "target": "state:held",
+   "usd": 8900000
+  },
+  {
+   "source": "chain:near",
+   "target": "state:held",
+   "usd": 3410000
+  },
+  {
+   "source": "chain:ethereum",
+   "target": "state:frozen",
+   "usd": 2018000000
+  },
+  {
+   "source": "chain:xrpl",
+   "target": "state:frozen",
+   "usd": 177000000
+  },
+  {
+   "source": "chain:tron",
+   "target": "state:frozen",
+   "usd": 355100000
+  },
+  {
+   "source": "chain:solana",
+   "target": "state:frozen",
+   "usd": 62000000
+  },
+  {
+   "source": "chain:base",
+   "target": "state:frozen",
+   "usd": 103000000
+  },
+  {
+   "source": "chain:arbitrum",
+   "target": "state:frozen",
+   "usd": 80000000
+  },
+  {
+   "source": "chain:ethereum",
+   "target": "exit:exchange",
+   "usd": 66000000
+  },
+  {
+   "source": "chain:ethereum",
+   "target": "exit:mixer",
+   "usd": 166000000
+  },
+  {
+   "source": "chain:ethereum",
+   "target": "exit:bridge",
+   "usd": 131000000
+  },
+  {
+   "source": "chain:ethereum",
+   "target": "exit:dex",
+   "usd": 40000000
+  },
+  {
+   "source": "chain:ethereum",
+   "target": "exit:lending",
+   "usd": 38000000
+  },
+  {
+   "source": "chain:ethereum",
+   "target": "exit:staking",
+   "usd": 22000000
+  },
+  {
+   "source": "chain:bitcoin",
+   "target": "exit:exchange",
+   "usd": 140000000
+  },
+  {
+   "source": "chain:bitcoin",
+   "target": "exit:mixer",
+   "usd": 222000000
+  },
+  {
+   "source": "chain:bitcoin",
+   "target": "exit:bridge",
+   "usd": 74515000
+  },
+  {
+   "source": "chain:xrpl",
+   "target": "exit:exchange",
+   "usd": 60000000
+  },
+  {
+   "source": "chain:xrpl",
+   "target": "exit:bridge",
+   "usd": 104000000
+  },
+  {
+   "source": "chain:xrpl",
+   "target": "exit:dex",
+   "usd": 18000000
+  },
+  {
+   "source": "chain:tron",
+   "target": "exit:exchange",
+   "usd": 30000000
+  },
+  {
+   "source": "chain:tron",
+   "target": "exit:bridge",
+   "usd": 140000000
+  },
+  {
+   "source": "chain:tron",
+   "target": "exit:dex",
+   "usd": 6000000
+  },
+  {
+   "source": "chain:tron",
+   "target": "exit:other",
+   "usd": 22000000
+  },
+  {
+   "source": "chain:solana",
+   "target": "exit:bridge",
+   "usd": 32000000
+  },
+  {
+   "source": "chain:solana",
+   "target": "exit:dex",
+   "usd": 4000000
+  },
+  {
+   "source": "chain:avalanche",
+   "target": "exit:bridge",
+   "usd": 1500000
+  }
+ ]
+}

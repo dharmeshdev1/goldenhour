@@ -1,0 +1,101 @@
+{
+ "id": "binance-2026-10",
+ "title": "Binance, 29 October 2026",
+ "victim": "Binance",
+ "attribution": "TraderTraitor (North Korea), per the FBI alert of 31 October 2026",
+ "window": {
+  "start": "2026-10-29T19:00:00Z",
+  "end": "2026-10-30T00:10:00Z"
+ },
+ "reported": {
+  "stolen_usd": 6430000000,
+  "stolen_usd_source": "Elliptic, 3 November 2026 (Binance put affected user funds at 6.34 billion)",
+  "frozen_usd": 2850000000,
+  "frozen_usd_source": "Elliptic, 6 November 2026, frozen or seized",
+  "chains": 11
+ },
+ "timeline": [
+  {
+   "at": "2026-06",
+   "what": "A Wallet DevOps engineer installs a tampered Homebrew package, found through a search ad while looking for an AI coding tool.",
+   "source": "binance-report"
+  },
+  {
+   "at": "2026-09",
+   "what": "A second engineer runs an interview 'assignment' from a fake recruiter. It replaces pyenv in the Homebrew directory with a backdoor.",
+   "source": "binance-report"
+  },
+  {
+   "at": "2026-10-20",
+   "what": "Through the second engineer's machine and an internal AI tool, the attacker takes over two more engineers' computers and finds a token with container deployment rights.",
+   "source": "binance-report"
+  },
+  {
+   "at": "2026-10-29",
+   "what": "Hours before the drain, a container deployed with stolen credentials reaches the wallet signing service. It signs what the attacker asks, including 50 EIP-7702 delegations.",
+   "source": "tangem"
+  },
+  {
+   "at": "2026-10-29T20:05:00Z",
+   "what": "The drain begins on the XRP Ledger: 233.46 million XRP leave five hot wallets in four minutes.",
+   "source": "tangem"
+  },
+  {
+   "at": "2026-10-29T20:20:00Z",
+   "what": "Ethereum and Bitcoin follow. 18,270 BTC is split across 19 addresses within half an hour.",
+   "source": "elliptic"
+  },
+  {
+   "at": "2026-10-29",
+   "what": "Tether freezes the stolen USDT on Ethereum, 37 minutes after it arrived. 434 million USDT had already been swapped for ETH.",
+   "source": "elliptic"
+  },
+  {
+   "at": "2026-10-29T23:56:00Z",
+   "what": "The last transfer, 2,961.9 ETH. The delegations had kept working after withdrawals were suspended.",
+   "source": "thoropass"
+  },
+  {
+   "at": "2026-10-30T00:10:00Z",
+   "what": "Binance revokes the EIP-7702 delegations.",
+   "source": "thoropass"
+  },
+  {
+   "at": "2026-10-31",
+   "what": "The FBI attributes the theft to TraderTraitor and publishes 628 addresses.",
+   "source": "fbi"
+  }
+ ],
+ "sources": [
+  {
+   "id": "fbi",
+   "title": "FBI: North Korea Responsible for $6 Billion+ Binance Attack (31 October 2026)",
+   "url": "https://www.fbi.gov/investigate/cyber/alerts/2026/north-korea-responsible-for-6-billion-binance-attack"
+  },
+  {
+   "id": "binance-report",
+   "title": "Binance: 29 October Binance Security Incident, Initial Findings and Response Update",
+   "url": "https://x.com/binance/status/2117626126214504729"
+  },
+  {
+   "id": "elliptic",
+   "title": "Elliptic: How North Korea is laundering the $6.4 billion stolen from Binance",
+   "url": "https://www.elliptic.co/insights/how-north-korea-is-laundering-the-6-4-billion-stolen-from-binance"
+  },
+  {
+   "id": "thoropass",
+   "title": "Thoropass: Binance Breach Explained",
+   "url": "https://www.thoropass.com/blog/binance-breach-2026"
+  },
+  {
+   "id": "tangem",
+   "title": "Tangem: Binance Hack 2026, How Attackers Stole $6.34B",
+   "url": "https://tangem.com/en/blog/post/binance-hack-2026-how-it-happened/"
+  },
+  {
+   "id": "cnbc",
+   "title": "CNBC: Binance co-CEO says hackers used fake job interviews and an AI tool",
+   "url": "https://www.cnbc.com/2026/11/03/binance-co-ceo-teng-says-hackers-used-fake-job-interviews-to-steal-6point3-billion-in-crypto.html"
+  }
+ ]
+}

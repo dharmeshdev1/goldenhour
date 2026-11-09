@@ -1,0 +1,7 @@
+{
+  "kind": "evm_message",
+  "chain_id": 1,
+  "wallet": "0x28C6c06298d514Db089934071355E5743bf21d60",
+  "message": "0x05db019463e842b054bd624a465454d533c33f573e9c6fae8401209df9",
+  "approvals": []
+}

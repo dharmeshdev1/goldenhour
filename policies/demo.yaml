@@ -1,0 +1,96 @@
+# Goldenhour Guard: the policy behind the public demonstration cases (api/v1/guard.json).
+#
+# Do not deploy this file. The demo exchange's wallets and the approver keys are derived from
+# published seeds (see goldenhour.guard.cases), so anyone can sign as alice, bob or carol. The rules
+# are the ones in policies/default.yaml, which explains each of them; only the wallets, one treasury
+# destination and the approvers are added here.
+
+version: 1
+name: demo
+
+wallets:
+  - address: "0x66A2f4A63310aCa888F8e578BA5a7093BA3Bb8b3"
+    label: exchange-hot
+    role: hot
+  - address: "0xfdd17ce25474caaA40d5d5c3A1B89010c41F0201"
+    label: exchange-treasury
+    role: treasury
+    max_per_tx_usd: 1000000
+    velocity_limit_usd: 10000000
+  # Two real wallets, listed as they would have been had Guard protected them: Bybit's Ethereum
+  # cold wallet (a Safe) and Binance 14, the Binance hot wallet that was delegated on 29 October 2026.
+  - address: "0x1Db92e2EeBC8E0c075a02BeA49a2935BcD2dFCF4"
+    label: bybit-cold-safe
+    role: cold
+  - address: "0x28C6c06298d514Db089934071355E5743bf21d60"
+    label: binance-14
+    role: hot
+
+assets:
+  - chain_id: 1
+    address: native
+    symbol: ETH
+    decimals: 18
+    price_floor_usd: 1000
+  - chain_id: 1
+    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    symbol: USDC
+    decimals: 6
+    price_floor_usd: 0.9
+  - chain_id: 1
+    address: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    symbol: USDT
+    decimals: 6
+    price_floor_usd: 0.9
+
+rules:
+  no-eip7702-delegation:
+    severity: deny
+  no-delegatecall:
+    severity: deny
+    allow_targets:
+      - address: "0x40A2aCCbd92BCA938b02010E17A5b8929b49130D"
+        label: Safe MultiSendCallOnly 1.3.0
+      - address: "0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B"
+        label: Safe MultiSendCallOnly 1.3.0 (EIP-155)
+      - address: "0x9641d764fc13c8B624c04430C7356C1C7C8102e2"
+        label: Safe MultiSendCallOnly 1.4.1
+  no-blind-signing:
+    severity: deny
+  no-upgrade-or-owner-change:
+    severity: deny
+    change_windows: []
+  no-unlimited-approval:
+    severity: deny
+    threshold: 79228162514264337593543950335
+  approval-allowlist:
+    severity: deny
+    spenders: []
+  intent-required:
+    severity: deny
+  velocity:
+    severity: hold
+    window: 24h
+    limit_usd: 2000000
+  max-per-tx:
+    severity: hold
+    limit_usd: 250000
+  destination-allowlist:
+    severity: hold
+    roles: [treasury]
+    destinations:
+      - address: "0x95e444Df319D947A386ce4BC2cEa829fF091e09A"
+        label: exchange-cold-storage
+  explainable:
+    severity: hold
+    contracts: []
+
+quorum:
+  threshold: 2
+  approvers:
+    - id: alice
+      public_key: "d57b9c8d33ce52e3a73ce9707565e1c1602cbeda53a91c1fd54ae4ade291989a"
+    - id: bob
+      public_key: "609ac26e53bd577d8d9511edbb2d7c156ada7db8abddd99ad71e2b19ddff5504"
+    - id: carol
+      public_key: "96cf87a63fe428096fea3b64afd8798e357de1201a3ff124d04bcaa39fe68335"

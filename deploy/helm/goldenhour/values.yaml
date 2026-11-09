@@ -1,0 +1,34 @@
+image:
+  repository: ghcr.io/dharmeshdev1/goldenhour
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+# Seconds between tracer runs.
+interval: 300
+
+# PostgreSQL connection string. Put it in a Secret and reference it with existingSecret.
+database:
+  existingSecret: ""
+  key: url
+
+# Optional API keys for faster, more complete data. Leave empty to use free public sources only.
+apiKeys:
+  existingSecret: ""
+
+# Alert channels (see deploy/notify.example.yaml). Put real URLs and keys in a Secret.
+notify:
+  existingSecret: ""
+  key: notify.yaml
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 768Mi
+  limits:
+    memory: 1536Mi
+
+persistence:
+  size: 5Gi
+
+service:
+  port: 8080

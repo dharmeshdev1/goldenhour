@@ -1,0 +1,53 @@
+{
+ "v": 2,
+ "entries": {
+  "6dd27a02ee52e6c643c411efd31bdb4d9622916b98f2ce6fb27941dfd2fe6c80": [
+   {
+    "node": "ethereum:0x441a30fa0aa3f9c37b417a577f62aaace8267464",
+    "chain": "ethereum",
+    "address": "0x441a30fa0aa3f9c37b417a577f62aaace8267464",
+    "role": "service",
+    "category": "mixer",
+    "label": "Railgun relay adapt",
+    "hop": 2,
+    "received_usd": 119520000,
+    "held_usd": 0,
+    "first_ts": 1793317383,
+    "reason": "A mixer service that received value directly from the trail. The trail stops here.",
+    "exposure": "direct"
+   }
+  ],
+  "6dd595474e352d1cf2d242cfe700aa8978613162c2232d03aec3db940c63182e": [
+   {
+    "node": "solana:uvojPSdowYcCHTNyV5X9PBxDq2tfUQma12ZH18tUtJT",
+    "chain": "solana",
+    "address": "uvojPSdowYcCHTNyV5X9PBxDq2tfUQma12ZH18tUtJT",
+    "role": "trail",
+    "category": "attacker",
+    "label": "",
+    "hop": 11,
+    "received_usd": 220674.53,
+    "held_usd": 129719.56,
+    "first_ts": 1793609498,
+    "reason": "75% of the value it ever received came from trail addresses (hop 11).",
+    "exposure": "trail"
+   }
+  ],
+  "6dd24898173ad970a50323fae03b3111765c74150c2c6baaf1c20f61ec341862": [
+   {
+    "node": "solana:hrGuPtGwDanZnbAJABTXHqLoaZRa5Rad8RbDScGKCp92",
+    "chain": "solana",
+    "address": "hrGuPtGwDanZnbAJABTXHqLoaZRa5Rad8RbDScGKCp92",
+    "role": "counterparty",
+    "category": "unknown",
+    "label": "",
+    "hop": 6,
+    "received_usd": 8778.91,
+    "held_usd": 5383.81,
+    "first_ts": 1793882621,
+    "reason": "Received value directly from a trail address, but most of its value came from elsewhere, so it did not join the trail.",
+    "exposure": "direct"
+   }
+  ]
+ }
+}

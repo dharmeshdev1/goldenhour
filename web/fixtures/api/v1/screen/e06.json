@@ -1,0 +1,37 @@
+{
+ "v": 2,
+ "entries": {
+  "e065a6c27682cc4e496c6753be7183a9974c140ddb6e1ff17f01e960ba91c111": [
+   {
+    "node": "tron:T9jhXc8h5EpSCcDLnnjskJNyntM3RavBoi",
+    "chain": "tron",
+    "address": "T9jhXc8h5EpSCcDLnnjskJNyntM3RavBoi",
+    "role": "counterparty",
+    "category": "unknown",
+    "label": "",
+    "hop": 3,
+    "received_usd": 1685839.23,
+    "held_usd": 604824.39,
+    "first_ts": 1793311845,
+    "reason": "Received value directly from a trail address, but most of its value came from elsewhere, so it did not join the trail.",
+    "exposure": "direct"
+   }
+  ],
+  "e0677e1c47030025e201f31faf710ef45eea454b087872b4fb3fcc0932ee7eda": [
+   {
+    "node": "bitcoin:bc1q2jx6xg2flg70q75jdln0czdqv2sdusv87n7j45",
+    "chain": "bitcoin",
+    "address": "bc1q2jx6xg2flg70q75jdln0czdqv2sdusv87n7j45",
+    "role": "counterparty",
+    "category": "unknown",
+    "label": "",
+    "hop": 6,
+    "received_usd": 343410.53,
+    "held_usd": 239922.75,
+    "first_ts": 1793416837,
+    "reason": "Received value directly from a trail address, but most of its value came from elsewhere, so it did not join the trail.",
+    "exposure": "direct"
+   }
+  ]
+ }
+}

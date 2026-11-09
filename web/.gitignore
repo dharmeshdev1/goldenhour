@@ -1,0 +1,13 @@
+# Dependencies and build output
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Development fixtures are copied here by `pnpm dev` (scripts/fixtures.mjs). The real pipeline
+# publishes its own files into the deployed site; neither belongs in git.
+public/api/
+
+# Copied from node_modules and fetched at build time (scripts/copy-duckdb.mjs)
+public/duckdb/

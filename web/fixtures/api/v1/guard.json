@@ -1,0 +1,212 @@
+{
+ "policy_yaml": "# Guard policy for custody wallets.\n# Every signing request is evaluated here before the signing service sees it.\n# A request is signed only when no rule denies or holds it. Deny wins over hold.\nversion: 1\n\nscope:\n  wallets: [hot, warm]\n  chains: [ethereum, optimism, arbitrum, base, polygon, avalanche,\n           bitcoin, tron, xrpl, solana, near]\n\nintents:\n  # Withdrawal intents come from the ledger, signed by the withdrawals service,\n  # never from the caller that asks for the signature.\n  source: withdrawals-ledger\n  match: [destination, asset, amount]\n  max_age: 15m\n\nrules:\n  - id: no-delegation\n    description: Custody wallets never delegate their code or set an authority.\n    match: { type: [eip7702_authorization, set_code, set_authority] }\n    decision: deny\n\n  - id: intent-required\n    description: Every outgoing transfer matches a withdrawal intent.\n    match: { type: [transfer, token_transfer] }\n    require: intent\n    on_missing: deny\n\n  - id: halt\n    description: While withdrawals are suspended, nothing leaves a custody wallet.\n    match: { flag: withdrawals_suspended }\n    decision: deny\n\n  - id: velocity\n    description: At most 5% of a hot wallet's balance in any 10 minutes.\n    window: 10m\n    limit: { share_of_balance: 0.05 }\n    on_breach: hold\n\n  - id: fan-out\n    description: More than 10 new destinations in 5 minutes needs a second approver.\n    window: 5m\n    limit: { new_destinations: 10 }\n    on_breach: hold\n\n  - id: contract-allowlist\n    description: Contract calls only to allowlisted contracts and selectors.\n    match: { type: contract_call }\n    require: { allowlist: custody-contracts }\n    on_missing: hold\n\napprovals:\n  hold:\n    approvers: 2\n    from: [treasury-ops, security-oncall]\n    timeout: 30m\n    on_timeout: deny\n",
+ "cases": [
+  {
+   "id": "binance-delegation",
+   "title": "An EIP-7702 delegation from a hot wallet",
+   "story": "The kind of request the signing service received on 29 October: authorize an outside contract to execute on behalf of a hot wallet. Fifty of these were signed.",
+   "chain": "ethereum",
+   "tx": null,
+   "request": {
+    "type": "eip7702_authorization",
+    "wallet": "hot-eth-04",
+    "from": "0x6464114000aff930a662dee2facd35f7ded1897b",
+    "delegate": "0xca52b6b7a193ac5db0637ec66a48b4dc9839a2e0",
+    "chain_id": 1,
+    "nonce": 48211,
+    "requested_by": "svc/deploy-runner-7f9c"
+   },
+   "decision": "deny",
+   "reasons": [
+    {
+     "rule": "no-delegation",
+     "message": "Custody wallets never delegate their code. Refused before signing, whoever asks."
+    },
+    {
+     "rule": "intent-required",
+     "message": "No withdrawal intent references this request."
+    }
+   ]
+  },
+  {
+   "id": "no-intent-transfer",
+   "title": "A transfer no customer asked for",
+   "story": "A caller with valid service credentials asks for 12,400 ETH to an address that appears in no withdrawal request.",
+   "chain": "ethereum",
+   "tx": null,
+   "request": {
+    "type": "transfer",
+    "wallet": "hot-eth-02",
+    "to": "0xfed80eb6b7a6102920b70005b053bb1a615e1f8c",
+    "asset": "ETH",
+    "amount": "12400",
+    "requested_by": "svc/deploy-runner-7f9c",
+    "intent_id": null
+   },
+   "decision": "deny",
+   "reasons": [
+    {
+     "rule": "intent-required",
+     "message": "No intent in the withdrawals ledger matches destination, asset and amount."
+    }
+   ]
+  },
+  {
+   "id": "xrpl-sweep",
+   "title": "Five XRP wallets emptied in four minutes",
+   "story": "A burst of payments that would move most of each hot wallet's balance within minutes, as on the XRP Ledger at 20:05 UTC.",
+   "chain": "xrpl",
+   "tx": null,
+   "request": {
+    "type": "transfer",
+    "wallet": "hot-xrp-01",
+    "to": "rEYEbkimA6wdb4J7PxTKBffdAEcYTNKkjj",
+    "asset": "XRP",
+    "amount": "48200000",
+    "balance_share_10m": 0.61,
+    "intent_id": null
+   },
+   "decision": "deny",
+   "reasons": [
+    {
+     "rule": "intent-required",
+     "message": "No matching withdrawal intent."
+    },
+    {
+     "rule": "velocity",
+     "message": "61% of the wallet's balance within 10 minutes; the limit is 5%."
+    }
+   ]
+  },
+  {
+   "id": "btc-split",
+   "title": "Bitcoin split across 19 new addresses",
+   "story": "One request pays 19 addresses the wallet has never paid before, the pattern of the 18,270 BTC split.",
+   "chain": "bitcoin",
+   "tx": null,
+   "request": {
+    "type": "transfer",
+    "wallet": "hot-btc-01",
+    "outputs": 19,
+    "new_destinations": 19,
+    "asset": "BTC",
+    "amount": "4820.5",
+    "intent_id": null
+   },
+   "decision": "deny",
+   "reasons": [
+    {
+     "rule": "intent-required",
+     "message": "None of the 19 outputs matches a withdrawal intent."
+    },
+    {
+     "rule": "fan-out",
+     "message": "19 new destinations in one request; more than 10 needs a second approver."
+    }
+   ]
+  },
+  {
+   "id": "after-halt",
+   "title": "Signing after withdrawals were suspended",
+   "story": "Withdrawals are suspended, but a request arrives anyway. On 29 October the delegations kept moving funds after the halt.",
+   "chain": "ethereum",
+   "tx": null,
+   "request": {
+    "type": "token_transfer",
+    "wallet": "hot-eth-05",
+    "to": "0x56c77c62125ddae5a069469f8e9bb87d4b986bae",
+    "asset": "USDT",
+    "amount": "25000000",
+    "flags": [
+     "withdrawals_suspended"
+    ]
+   },
+   "decision": "deny",
+   "reasons": [
+    {
+     "rule": "halt",
+     "message": "Withdrawals are suspended. Nothing leaves a custody wallet until the halt is lifted."
+    }
+   ]
+  },
+  {
+   "id": "unknown-contract",
+   "title": "A call to a contract nobody approved",
+   "story": "A contract call from a hot wallet to an address that is not on the custody allowlist.",
+   "chain": "arbitrum",
+   "tx": null,
+   "request": {
+    "type": "contract_call",
+    "wallet": "hot-arb-01",
+    "to": "0xa28be6587e3e3bd84d4dd0a9ab55b5f970cca736",
+    "selector": "0x095ea7b3",
+    "decoded": {
+     "method": "approve",
+     "spender": "0xe5158bc717098a0e4feb788b396dd3c4dff74ede",
+     "amount": "unlimited"
+    }
+   },
+   "decision": "hold",
+   "reasons": [
+    {
+     "rule": "contract-allowlist",
+     "message": "The contract is not on the custody allowlist. Held for two approvers."
+    }
+   ]
+  },
+  {
+   "id": "treasury-move",
+   "title": "A large treasury move with an intent behind it",
+   "story": "Treasury moves 3,000 BTC to cold storage. The intent matches, but the size breaches the velocity limit, so it waits for two approvers.",
+   "chain": "bitcoin",
+   "tx": null,
+   "request": {
+    "type": "transfer",
+    "wallet": "hot-btc-02",
+    "to": "bc1qc4ev05kjuykzc4kasuaqa5669j702mpwx6gm0y",
+    "asset": "BTC",
+    "amount": "3000",
+    "intent_id": "TRS-2026-1029-004",
+    "balance_share_10m": 0.18
+   },
+   "decision": "hold",
+   "reasons": [
+    {
+     "rule": "intent-required",
+     "message": "Matches treasury intent TRS-2026-1029-004."
+    },
+    {
+     "rule": "velocity",
+     "message": "18% of the wallet's balance within 10 minutes; held for two approvers."
+    }
+   ]
+  },
+  {
+   "id": "customer-withdrawal",
+   "title": "An ordinary customer withdrawal",
+   "story": "A customer withdraws 2.5 ETH. Destination, asset and amount match the intent in the ledger, and the wallet is well inside its limits.",
+   "chain": "ethereum",
+   "tx": "0x180bf7534cbed233ebef7981e866a14cf38d498e5d92d02e09e934728aa5761e",
+   "request": {
+    "type": "transfer",
+    "wallet": "hot-eth-01",
+    "to": "0xafd13ea4528250f4acb49c5c21d85d858281b5f5",
+    "asset": "ETH",
+    "amount": "2.5",
+    "intent_id": "W-88213-0042",
+    "balance_share_10m": 0.0004
+   },
+   "decision": "allow",
+   "reasons": [
+    {
+     "rule": "intent-required",
+     "message": "Matches withdrawal W-88213-0042: destination, asset and amount agree."
+    },
+    {
+     "rule": "velocity",
+     "message": "0.04% of balance in the last 10 minutes."
+    }
+   ]
+  }
+ ]
+}

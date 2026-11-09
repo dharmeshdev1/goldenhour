@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  labels: {app.kubernetes.io/name: goldenhour, app.kubernetes.io/instance: {{ .Release.Name }}}
+spec:
+  selector: {app.kubernetes.io/name: goldenhour, app.kubernetes.io/instance: {{ .Release.Name }}}
+  ports: [{name: http, port: {{ .Values.service.port }}, targetPort: http}]
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-data
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: {requests: {storage: {{ .Values.persistence.size }}}}

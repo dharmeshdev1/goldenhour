@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels: {app.kubernetes.io/name: goldenhour, app.kubernetes.io/instance: {{ .Release.Name }}}
+spec:
+  replicas: 1  # one tracer per database; scale reads behind a cache instead
+  strategy: {type: Recreate}
+  selector:
+    matchLabels: {app.kubernetes.io/name: goldenhour, app.kubernetes.io/instance: {{ .Release.Name }}}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: goldenhour, app.kubernetes.io/instance: {{ .Release.Name }}}
+    spec:
+      securityContext: {runAsNonRoot: true, runAsUser: 10001, fsGroup: 10001, seccompProfile: {type: RuntimeDefault}}
+      containers:
+        - name: goldenhour
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: ["serve", "--host", "0.0.0.0", "--port", "8080", "--interval", "{{ .Values.interval }}"{{ if .Values.notify.existingSecret }}, "--notify", "/config/notify.yaml"{{ end }}]
+          env:
+            - {name: GOLDENHOUR_STATE, value: /data}
+            {{- if .Values.database.existingSecret }}
+            - name: GOLDENHOUR_DATABASE_URL
+              valueFrom: {secretKeyRef: {name: {{ .Values.database.existingSecret }}, key: {{ .Values.database.key }}}}
+            {{- end }}
+          {{- if .Values.apiKeys.existingSecret }}
+          envFrom:
+            - secretRef: {name: {{ .Values.apiKeys.existingSecret }}}
+          {{- end }}
+          ports: [{name: http, containerPort: 8080}]
+          readinessProbe: {httpGet: {path: /readyz, port: http}, periodSeconds: 10, failureThreshold: 60}
+          livenessProbe: {httpGet: {path: /healthz, port: http}, periodSeconds: 30}
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+          securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
+          volumeMounts:
+            - {name: data, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+            {{- if .Values.notify.existingSecret }}
+            - {name: notify, mountPath: /config, readOnly: true}
+            {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim: {claimName: {{ .Release.Name }}-data}
+        - {name: tmp, emptyDir: {}}
+        {{- if .Values.notify.existingSecret }}
+        - name: notify
+          secret: {secretName: {{ .Values.notify.existingSecret }}, items: [{key: {{ .Values.notify.key }}, path: notify.yaml}]}
+        {{- end }}
