@@ -711,12 +711,15 @@ class Tracer:
                     out[chunk[k]] = int(item["result"], 16)
         return out
 
-    async def changed(self, nodes: list[str]) -> dict[str, int | None]:
+    async def changed(self, nodes: list[str], stop: float = float("inf")) -> dict[str, int | None]:
         """Which of these trail addresses have done something since they were last read.
 
         Reading a full history costs one to three requests per address; asking "has it sent
         anything?" costs one request per hundred addresses on EVM chains. A launderer's address
         cannot move value without sending a transaction, so its nonce is the change signal.
+        Bitcoin needs one request per address, so those checks stop at `stop` (monotonic time)
+        and return what they found; an address found unchanged is stamped, so the next run
+        checks the ones this run did not reach.
         """
         moved: dict[str, int | None] = {}
         by_chain: dict[Chain, list[str]] = {}
@@ -737,13 +740,18 @@ class Tracer:
                         moved[n] = nonce
             elif chain is Chain.BITCOIN:
                 for n in group:
+                    if time.monotonic() > stop:
+                        break
                     try:
                         stats = await self.btc.stats(split_node(n)[1])
                     except Exception:
                         continue
                     count = int((stats.get("chain_stats") or {}).get("tx_count", 0))
-                    if count != int(((self.trail.roles.get(n) or {}).get("cursor") or {}).get("tx_count", -1)):
+                    cursor = dict((self.trail.roles.get(n) or {}).get("cursor") or {})
+                    if count != int(cursor.get("tx_count", -1)):
                         moved[n] = None
+                    else:
+                        self._save(n, cursor={**cursor, "checked_at": now_ts()})
             else:
                 # Tron, the XRP Ledger and Solana: their history reads are incremental and cheap
                 # for quiet addresses, so the read is the check.
@@ -764,11 +772,13 @@ class Tracer:
         candidates = [n for _, n in holders]
         evm = [n for n in candidates if split_node(n)[0].is_evm]
         other = [n for n in candidates if not split_node(n)[0].is_evm]
-        # Oldest reads first among non-EVM chains, so every holder is revisited in turn.
-        other.sort(key=lambda n: int((self.trail.roles.get(n) or {}).get("fetched_at", 0)))
+        # Least recently read or checked first among non-EVM chains, so every holder gets its turn.
+        other.sort(key=self._last_seen)
+        # Checks get at most two fifths of the time left; the rest is for reading what moved.
+        stop = time.monotonic() + max(0.0, self.deadline - time.monotonic()) * 0.4
         moved: dict[str, int | None] = {}
         for group in (evm, other[: max(0, max_nodes // 2)]):
-            found = await self._within_deadline(self.changed(group), "change check")
+            found = await self._within_deadline(self.changed(group, stop), "change check")
             moved.update(found or {})
         # A nonce does not move when value leaves through an approval, a permit or delegated code
         # called by someone else, so every holder is also re-read on a slower clock.
@@ -780,6 +790,10 @@ class Tracer:
         await self._gather(chosen, lambda item: self._fetch_seed(item[0], item[1]), concurrency=8)
         self.stats["refreshed"] = self.stats.get("refreshed", 0) + len(chosen)
         return len(chosen)
+
+    def _last_seen(self, node: str) -> int:
+        row = self.trail.roles.get(node) or {}
+        return max(int(row.get("fetched_at", 0) or 0), int((row.get("cursor") or {}).get("checked_at", 0) or 0))
 
     def _held_usd(self, node: str) -> float:
         bal: dict[str, int] = {}

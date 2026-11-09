@@ -180,3 +180,25 @@ async def test_a_step_without_its_own_deadline_is_cut_at_the_run_deadline() -> N
         return "done"
 
     assert await tracer._within_deadline(quick(), "quick step") == "done"
+
+
+async def test_bitcoin_change_checks_stop_on_time_and_take_turns(tracer: Tracer) -> None:  # type: ignore[no-untyped-def]
+    import time
+
+    quiet = [f"bitcoin:bc1q{c * 38}" for c in "acdef"]
+    for n in quiet:
+        tracer._save(n, role="trail", cursor={"tx_count": 3}, fetched_at=100)
+    asked: list[str] = []
+
+    class Esplora:
+        async def stats(self, address: str) -> dict:
+            asked.append(address)
+            return {"chain_stats": {"tx_count": 3}}
+
+    tracer.btc = Esplora()  # type: ignore[assignment]
+    assert await tracer.changed(quiet, stop=time.monotonic() - 1) == {}  # out of time: nothing asked
+    assert asked == []
+    assert await tracer.changed(quiet[:2]) == {}  # unchanged, and stamped as checked
+    assert all((tracer.trail.roles[n]["cursor"] or {}).get("checked_at") for n in quiet[:2])
+    order = sorted(quiet, key=tracer._last_seen)
+    assert order[:3] == quiet[2:]  # the next run starts with the ones not checked yet
