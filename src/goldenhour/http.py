@@ -222,6 +222,10 @@ class PoliteClient:
         resp.raise_for_status()
         return resp.json()
 
+    def refusing(self, url: str) -> bool:
+        """Whether this URL's host is in its cool-down after refusing too many requests."""
+        return self._open_until.get(urlsplit(url).hostname or "", 0.0) > time.monotonic()
+
     def slow_down(self, url: str) -> None:
         self._buckets[urlsplit(url).hostname or ""].slow_down()
 

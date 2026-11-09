@@ -202,3 +202,19 @@ async def test_bitcoin_change_checks_stop_on_time_and_take_turns(tracer: Tracer)
     assert all((tracer.trail.roles[n]["cursor"] or {}).get("checked_at") for n in quiet[:2])
     order = sorted(quiet, key=tracer._last_seen)
     assert order[:3] == quiet[2:]  # the next run starts with the ones not checked yet
+
+
+def test_a_source_in_cool_down_is_passed_over(tracer: Tracer) -> None:  # type: ignore[no-untyped-def]
+    from types import SimpleNamespace
+
+    from goldenhour.models import Chain
+
+    routescan = SimpleNamespace(explorer=SimpleNamespace(base_url="https://api.routescan.io/x"))
+    blockscout = SimpleNamespace(base="https://eth.blockscout.com/api/v2")
+    tracer.evm[Chain.ETHEREUM] = [routescan, blockscout]
+    refusing = {"https://api.routescan.io/x"}
+    tracer.client = SimpleNamespace(refusing=lambda url: url in refusing)  # type: ignore[assignment]
+    addresses = [f"0x{d * 40}" for d in "0123456789abcdef"]
+    assert {id(tracer._evm_adapter(Chain.ETHEREUM, a, {})) for a in addresses} == {id(blockscout)}
+    refusing.clear()  # cooled down: both share the work again
+    assert {id(tracer._evm_adapter(Chain.ETHEREUM, a, {})) for a in addresses} == {id(routescan), id(blockscout)}

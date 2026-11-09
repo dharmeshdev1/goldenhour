@@ -60,6 +60,12 @@ THOR_MAX_TRIES = 12
 REREAD_S = 6 * 3600  # holders are re-read at least this often, whatever their nonce says
 
 
+def _source_url(adapter: object) -> str:
+    """The base URL an EVM history adapter reads from."""
+    explorer = getattr(adapter, "explorer", None)
+    return str(getattr(adapter, "base", "") or getattr(explorer, "base_url", ""))
+
+
 def reparse(store: Store) -> int:
     """Bring stored data up to the current parsers. Returns how many addresses were reset.
 
@@ -144,6 +150,9 @@ class Tracer:
         adapters = self.evm.get(chain) or []
         if not adapters:
             return None
+        # A source in its cool-down after refusing requests is passed over while another can answer.
+        if self.client is not None:
+            adapters = [a for a in adapters if not self.client.refusing(_source_url(a))] or adapters
         # Spread addresses across sources by their last hex digit; the choice is not sticky.
         return adapters[int(address[-1], 16) % len(adapters)]
 
@@ -166,7 +175,10 @@ class Tracer:
         elif chain is Chain.XRPL:
             page = await self.xrpl.history(address, cursor)
         elif chain is Chain.SOLANA:
-            page = await self.solana.history(address, cursor)
+            # The public node serves about one transaction a second: read no more than fits the run.
+            remaining = self.deadline - time.monotonic()
+            chunk = 150 if remaining > 150 else max(10, int(remaining))
+            page = await self.solana.history(address, cursor, chunk=chunk)
         else:
             return Page(complete=False, cursor=cursor)
         if len(page.transfers) > HUB_ROWS:
