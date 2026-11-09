@@ -154,7 +154,11 @@ class Store:
         with self.begin() as conn:
             for chunk in _chunks(rows, 2000):
                 stmt = self._insert(transfers).values(chunk).on_conflict_do_nothing(index_elements=["uid"])
-                added += conn.execute(stmt).rowcount or 0
+                if self.dialect == "postgresql":
+                    # PostgreSQL reports no row count for a multi-row insert that skips conflicts.
+                    added += len(conn.execute(stmt.returning(transfers.c.uid)).fetchall())
+                else:
+                    added += conn.execute(stmt).rowcount or 0
         return added
 
     def add_tokens(self, items: Iterable[Token]) -> None:
