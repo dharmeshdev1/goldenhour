@@ -88,6 +88,10 @@ jobs:
         run: scripts/fetch-releases.sh
 
       - name: Follow the money
+        # The tracer stops itself at its budget; this is the backstop. What it stored is kept, and
+        # the run publishes and deploys what it has.
+        timeout-minutes: 8
+        continue-on-error: true
         run: uv run goldenhour trace --live --budget 240 --max-judge 200
 
       - name: Publish the API

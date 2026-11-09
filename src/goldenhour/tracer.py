@@ -10,11 +10,12 @@ and a five-minute incremental update on a CI runner.
 from __future__ import annotations
 
 import asyncio
+import inspect
 import logging
 import os
 import time
-from collections.abc import Callable
-from typing import cast
+from collections.abc import Awaitable, Callable
+from typing import TypeVar, cast
 
 from goldenhour.case import Case
 from goldenhour.chains.bitcoin import EsploraAdapter
@@ -48,6 +49,7 @@ THOR_SUPPORTED = set(THOR_CHAINS.values())
 RELAY_CHAINS = set(RELAY_CHAIN_IDS.values())
 # Bump when a rule for judging addresses changes: stored verdicts are then judged again, from
 # stored data, before anything else runs.
+T = TypeVar("T")
 RULES_VERSION = 2
 # Bumped when a chain's parser changes what a transaction becomes: (version, whether the transfers
 # already stored changed meaning). Solana 2 counts SOL at the owner (wrapped SOL is SOL, token
@@ -764,7 +766,10 @@ class Tracer:
         other = [n for n in candidates if not split_node(n)[0].is_evm]
         # Oldest reads first among non-EVM chains, so every holder is revisited in turn.
         other.sort(key=lambda n: int((self.trail.roles.get(n) or {}).get("fetched_at", 0)))
-        moved = {**await self.changed(evm), **await self.changed(other[: max(0, max_nodes // 2)])}
+        moved: dict[str, int | None] = {}
+        for group in (evm, other[: max(0, max_nodes // 2)]):
+            found = await self._within_deadline(self.changed(group), "change check")
+            moved.update(found or {})
         # A nonce does not move when value leaves through an approval, a permit or delegated code
         # called by someone else, so every holder is also re-read on a slower clock.
         cutoff = now_ts() - REREAD_S
@@ -787,6 +792,23 @@ class Tracer:
         return sum(self.graph.usd_amount(a, v) for a, v in bal.items() if v > 0)
 
     # The loop
+
+    async def _within_deadline(self, work: Awaitable[T], what: str) -> T | None:
+        """Run a step that has no deadline of its own, stopping it when the run's time is up.
+
+        Price refreshes and change checks make many requests to hosts that can be slow or
+        throttle. Cut short, a step leaves what it already stored, and the next run continues.
+        """
+        remaining = self.deadline - time.monotonic()
+        if remaining <= 0:
+            if inspect.iscoroutine(work):
+                work.close()
+            return None
+        try:
+            return await asyncio.wait_for(work, timeout=remaining)
+        except TimeoutError:
+            log.warning("%s cut short: out of time for this run", what)
+            return None
 
     async def _gather(self, items: list, fn: Callable, concurrency: int) -> None:
         sem = asyncio.Semaphore(concurrency)
@@ -814,13 +836,13 @@ class Tracer:
         self.rejudge()
         if live:
             try:
-                await self.refresh_prices()
+                await self._within_deadline(self.refresh_prices(), "price refresh")
             except Exception as exc:
                 log.warning("price refresh failed: %s: %s", type(exc).__name__, str(exc)[:160])
             await self.refresh()
         while time.monotonic() < deadline:
             try:
-                await self.refresh_prices()
+                await self._within_deadline(self.refresh_prices(), "price refresh")
             except Exception as exc:
                 log.warning("price refresh failed: %s: %s", type(exc).__name__, str(exc)[:160])
             trail_nodes = [n for n, r in self.trail.roles.items() if r["role"] in TRAIL_ROLES]

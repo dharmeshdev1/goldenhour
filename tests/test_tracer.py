@@ -154,3 +154,29 @@ async def test_a_burn_address_is_a_service_and_never_read() -> None:
 
     ident = await Identifier(NoNetwork()).identify("ethereum:0x0000000000000000000000000000000000000000")  # type: ignore[arg-type]
     assert ident.is_service and ident.category == "burn" and ident.available
+
+
+async def test_a_step_without_its_own_deadline_is_cut_at_the_run_deadline() -> None:
+    import asyncio
+    import time
+
+    from goldenhour.tracer import Tracer
+
+    tracer = Tracer.__new__(Tracer)
+    tracer.deadline = time.monotonic() + 0.05
+
+    async def slow() -> str:
+        await asyncio.sleep(5)
+        return "done"
+
+    started = time.monotonic()
+    assert await tracer._within_deadline(slow(), "slow step") is None
+    assert time.monotonic() - started < 1
+    tracer.deadline = time.monotonic() - 1  # already out of time: the step does not even start
+    assert await tracer._within_deadline(slow(), "slow step") is None
+    tracer.deadline = time.monotonic() + 5
+
+    async def quick() -> str:
+        return "done"
+
+    assert await tracer._within_deadline(quick(), "quick step") == "done"
