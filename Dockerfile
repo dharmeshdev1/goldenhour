@@ -1,9 +1,10 @@
 # Goldenhour, self-hosted: the tracer, the API server, the Guard and the web app in one image.
 # Base images are pinned by digest (Dependabot proposes updates), like every action in CI.
-FROM node:24-slim@sha256:01d566e8d94d8c619591d78652babfccd3c6992a3dffa9ed5ab39e11cf6c70e9 AS web
+FROM node:26-slim@sha256:5adad64f9a1fca2d51972caa65983634c8a774eb300d72b20f7f2a0f60368072 AS web
 WORKDIR /web
 COPY web/package.json web/pnpm-lock.yaml ./
-RUN corepack enable && pnpm install --frozen-lockfile
+# Node 25 and later no longer ship corepack: install the pnpm version package.json names.
+RUN npm install -g "$(node -p "require('./package.json').packageManager")" && pnpm install --frozen-lockfile
 COPY web ./
 ENV NEXT_PUBLIC_BASE_PATH="" NEXT_TELEMETRY_DISABLED=1
 RUN pnpm build
