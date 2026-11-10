@@ -146,6 +146,13 @@ jobs:
             || { [ "$d_status" = "completed" ] && [ "$d_conclusion" != "success" ] && [ "$age" -gt 10800 ]; }; then
             gh workflow run daily.yml && echo "started the daily deep pass"
           fi
+          # The weekly README refresh, which is also the activity that keeps scheduled workflows on.
+          last_readme="$(gh run list --workflow readme.yml --status success --limit 1 --json createdAt --jq '.[0].createdAt // ""')"
+          if [ -z "$last_readme" ] || [ $(( now - $(date -u -d "$last_readme" +%s) )) -gt 604800 ]; then
+            if [ "$(gh run list --workflow readme.yml --limit 1 --json status --jq '.[0].status // "none"')" != "in_progress" ]; then
+              gh workflow run readme.yml && echo "started the README refresh"
+            fi
+          fi
           if [ "${others:-0}" -gt 0 ]; then
             echo "another run is queued or running; nothing to do"
             exit 0

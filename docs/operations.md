@@ -53,8 +53,9 @@ A rule change can shrink the trail on purpose; then run the Live pipeline by han
 `allow_shrink`.
 
 **Scheduled runs stopped after a quiet stretch.** GitHub disables scheduled workflows in a public
-repository after 60 days without activity in it. Re-enable the Live pipeline and Daily workflows
-from the Actions tab, or push any commit before then.
+repository after 60 days without activity in it. The README numbers workflow commits refreshed
+numbers once a week, which keeps the repository active; the live pipeline starts it when it is
+overdue. If the workflows were disabled anyway, re-enable them from the Actions tab.
 
 **A new address must be added by hand** (a first hop on a chain the tracer does not reach from the
 seeds). Add it to `extra_seeds` in `cases/<case>/case.yaml` with its reason and the transactions

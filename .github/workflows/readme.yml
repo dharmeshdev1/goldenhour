@@ -1,0 +1,51 @@
+# Once a week: rewrite the README's numbers and hero chart from the live API and commit them. The
+# README then never quotes stale numbers, and the commit is the repository activity that keeps
+# GitHub from switching the scheduled workflows off after 60 quiet days. The live pipeline starts
+# this workflow when it is overdue, so it does not depend on GitHub's scheduler.
+name: README numbers
+
+on:
+  schedule:
+    - cron: "41 6 * * 1"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: readme
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write  # to commit the refreshed README
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+        with:
+          persist-credentials: true  # zizmor: ignore[artipacked] the commit below is pushed with this token; nothing is uploaded
+
+      - name: Read the live API
+        run: |
+          site="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}"
+          mkdir -p live
+          for f in summary.json golden-hour.json; do
+            curl -fsS --retry 3 "$site/api/v1/$f" -o "live/$f"
+          done
+
+      - name: Rewrite the numbers and the hero chart
+        # The standard library only: no third-party code runs in a job that can push.
+        run: |
+          python3 scripts/readme_numbers.py live README.md
+          python3 scripts/readme_hero.py live docs/media/hero.svg
+
+      - name: Commit if anything changed
+        run: |
+          if git diff --quiet; then
+            echo "nothing changed"
+            exit 0
+          fi
+          git -c user.name="Dharmesh Meena" -c user.email="176051217+dharmeshdev1@users.noreply.github.com" \
+            commit -am "Refresh the README numbers from the live site"
+          git push
