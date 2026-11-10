@@ -4,7 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { ChartLegend, GoldenChart } from "@/components/charts/golden-chart";
 import { LayerIcon } from "@/components/ui/layer-icon";
 import { SourceRef } from "@/components/ui/source-ref";
@@ -16,7 +16,8 @@ import type { CaseFile } from "@/lib/types";
 import { useCase, useGoldenHour, useSummary } from "@/lib/use-api";
 import { useMedia } from "@/lib/use-media";
 
-const PIN_QUERY = "(min-width: 1024px) and (prefers-reduced-motion: no-preference)";
+// Pinning needs room: a short window gets the plain list, which never overlaps anything.
+const PIN_QUERY = "(min-width: 1024px) and (min-height: 720px) and (prefers-reduced-motion: no-preference)";
 
 interface Stage {
   at: string;
@@ -74,29 +75,67 @@ function StageCard({ stage, index, total }: { stage: Stage; index: number; total
 }
 
 function ChainRail({ stages, active, progressRef }: { stages: Stage[]; active: number; progressRef?: RefObject<HTMLDivElement | null> }) {
+  // The rail lives in a window no taller than the screen allows. When the stages do not fit, the
+  // list slides so the active stage stays in view, instead of spilling over the page around it.
+  const windowRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLOListElement>(null);
+  const [view, setView] = useState({ offset: 0, overflows: false });
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const win = windowRef.current;
+      const list = listRef.current;
+      if (!win || !list) return;
+      const room = win.clientHeight;
+      const total = list.scrollHeight;
+      const item = list.querySelectorAll<HTMLLIElement>(":scope > li")[active];
+      if (!item || total <= room) {
+        setView({ offset: 0, overflows: false });
+        return;
+      }
+      const target = item.offsetTop + item.offsetHeight / 2 - room / 2;
+      setView({ offset: Math.max(0, Math.min(target, total - room)), overflows: true });
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [active, stages.length]);
+
+  const fade = "linear-gradient(to bottom, transparent, black 7%, black 93%, transparent)";
   return (
-    <ol className="relative space-y-1 pl-6" aria-label="Stages of the attack">
-      <span aria-hidden="true" className="absolute top-2 bottom-2 left-[7px] w-px bg-line-2" />
-      <div ref={progressRef} aria-hidden="true" className="absolute top-2 bottom-2 left-[7px] w-px origin-top bg-gold" style={{ transform: "scaleY(0)" }} />
-      {stages.map((s, i) => {
-        const on = i === active;
-        const past = i < active;
-        return (
-          <li key={i} className="relative">
-            <span
-              aria-hidden="true"
-              className={`absolute top-[9px] -left-6 size-[15px] rounded-full border-2 transition-all duration-300 ${
-                on ? "border-gold bg-gold shadow-[0_0_18px_rgba(242,179,61,0.7)]" : past ? "border-gold-3 bg-bg" : "border-line-2 bg-bg"
-              }`}
-            />
-            <div className={`rounded-lg px-3 py-1.5 transition-colors duration-300 ${on ? "bg-[rgb(255_236_210/0.05)]" : ""}`}>
-              <p className={`num text-[11.5px] ${on ? "text-gold-2" : "text-ink-3"}`}>{formatTimelineAt(s.at)}</p>
-              <p className={`line-clamp-1 text-[13px] ${on ? "text-ink" : past ? "text-ink-3" : "text-ink-4"}`}>{s.what}</p>
-            </div>
-          </li>
-        );
-      })}
-    </ol>
+    <div
+      ref={windowRef}
+      className="max-h-[calc(100vh-64px-3rem)] overflow-hidden"
+      style={view.overflows ? { maskImage: fade, WebkitMaskImage: fade } : undefined}
+    >
+      <ol
+        ref={listRef}
+        className="relative space-y-1 py-3 pl-6 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        style={{ transform: `translateY(${-view.offset}px)` }}
+        aria-label="Stages of the attack"
+      >
+        <span aria-hidden="true" className="absolute top-5 bottom-5 left-[7px] w-px bg-line-2" />
+        <div ref={progressRef} aria-hidden="true" className="absolute top-5 bottom-5 left-[7px] w-px origin-top bg-gold" style={{ transform: "scaleY(0)" }} />
+        {stages.map((s, i) => {
+          const on = i === active;
+          const past = i < active;
+          return (
+            <li key={i} className="relative">
+              <span
+                aria-hidden="true"
+                className={`absolute top-[9px] -left-6 size-[15px] rounded-full border-2 transition-all duration-300 ${
+                  on ? "border-gold bg-gold shadow-[0_0_18px_rgba(242,179,61,0.7)]" : past ? "border-gold-3 bg-bg" : "border-line-2 bg-bg"
+                }`}
+              />
+              <div className={`rounded-lg px-3 py-1.5 transition-colors duration-300 ${on ? "bg-[rgb(255_236_210/0.05)]" : ""}`}>
+                <p className={`num text-[11.5px] ${on ? "text-gold-2" : "text-ink-3"}`}>{formatTimelineAt(s.at)}</p>
+                <p className={`line-clamp-1 text-[13px] ${on ? "text-ink" : past ? "text-ink-3" : "text-ink-4"}`}>{s.what}</p>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }
 
@@ -135,7 +174,7 @@ function PinnedChain({ stages }: { stages: Stage[] }) {
   }, [n]);
 
   return (
-    <div ref={section} className="flex h-[calc(100vh-64px)] items-center">
+    <div ref={section} className="flex h-[calc(100vh-64px)] items-center overflow-hidden">
       <div className="shell grid w-full grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-16">
         <ChainRail stages={stages} active={active} progressRef={progress} />
         <div className="relative min-h-[420px]">
