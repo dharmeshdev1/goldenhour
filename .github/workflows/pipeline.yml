@@ -171,7 +171,16 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url || steps.deploy_again.outputs.page_url }}
     steps:
       - id: deploy
+        continue-on-error: true  # deployed again below if an earlier deployment was still finishing
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346  # v5
+
+      - name: Let an earlier deployment finish
+        if: steps.deploy.outcome == 'failure'
+        run: sleep 90
+
+      - id: deploy_again
+        if: steps.deploy.outcome == 'failure'
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346  # v5
