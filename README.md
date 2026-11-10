@@ -17,17 +17,17 @@ Binance on 29 October 2026, which the FBI attributes to North Korea's TraderTrai
 [Architecture](docs/architecture.md)
 
 <!-- NUMBERS -->
-**The Binance case, from chain data, as of 2026-11-09** (the [live site](https://dharmeshdev1.github.io/goldenhour/) updates every five minutes):
+**The Binance case, from chain data, as of 2026-11-10** (the [live site](https://dharmeshdev1.github.io/goldenhour/) updates every five minutes):
 
 | | |
 | --- | --- |
 | Stolen, verified on-chain | $6.29 billion of the $6.43 billion reported, in 262 transfers from 11 Binance wallets |
-| Frozen by issuers, read from their contracts | $2.55 billion |
-| Still held at trail addresses | $2.99 billion across 921 addresses |
-| Moved out to services | $445 million |
-| Stablecoins swapped out of reach before a freeze | $759 million |
+| Frozen by issuers, read from their contracts | $2.58 billion |
+| Still held at trail addresses | $2.97 billion across 984 addresses |
+| Moved out to services | $568 million |
+| Stablecoins swapped out of reach before a freeze | $729 million |
 | First freeze | minute 56 (Tether freezes the first trail address on Ethereum) |
-| Trail | 1,083 addresses on 5 chains, 33,291 transfers followed |
+| Trail | 1,236 addresses on 5 chains, 57,588 transfers followed |
 <!-- /NUMBERS -->
 
 ## What it does
