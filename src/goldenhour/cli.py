@@ -64,13 +64,24 @@ async def trace_once(
     async with PoliteClient() as client:
         tracer = Tracer(store, client, c, prices, Policy(start_ts=c.start_ts, min_usd=min_usd))
         started = time.monotonic()
-        stats = await tracer.run(budget_s=budget, max_judge=max_judge, progress=progress, live=live)
+        try:
+            # The tracer stops starting work at its budget; reads already in flight may run on. This
+            # is the hard stop: whatever is still in flight a little later is dropped, unstored.
+            stats = await asyncio.wait_for(
+                tracer.run(budget_s=budget, max_judge=max_judge, progress=progress, live=live),
+                timeout=budget + HARD_STOP_GRACE_S,
+            )
+        except TimeoutError:
+            logging.getLogger("goldenhour").warning("stopped at the hard limit; reads in flight were dropped")
+            stats = {**tracer.stats, "hard_stop": 1}
         stats["requests"] = client.requests
         stats["duration_s"] = round(time.monotonic() - started, 1)
         stats["hosts"] = client.health()
         store.put(f"trace:{case_id}:last_run", {"at": int(time.time()), **stats})
         return stats
 
+
+HARD_STOP_GRACE_S = 45  # seconds a trace may run past its budget before reads in flight are dropped
 
 # Each read starts this far before its cursor: explorers index the chain head late, and events read
 # twice are dropped by (tx, node, kind).

@@ -13,8 +13,10 @@ on:
 
 permissions: {}  # each job asks for exactly what it needs
 
+# Its own group: in the pipeline's group a queued daily run would be replaced by the next queued
+# pipeline run and never start. It may run beside the pipeline; neither deploys the other's work.
 concurrency:
-  group: live-pipeline
+  group: daily
   cancel-in-progress: false
 
 jobs:

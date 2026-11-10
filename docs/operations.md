@@ -28,8 +28,12 @@ five minutes have passed and starts the next run itself.
 
 ## Runbook
 
-**The site is stale.** Look at the Live pipeline runs. If none is running or queued, start one:
-`gh workflow run pipeline.yml`. It keeps itself going from there.
+**The site is stale.** Look at the Live pipeline runs. Each run starts the next one unless another
+is already queued or running, because GitHub's scheduler can be hours late for a five-minute cron;
+the cron only restarts the chain if it breaks. If nothing is running or queued, start one:
+`gh workflow run pipeline.yml`. A trace stops itself at its budget and is stopped hard 45 seconds
+later, so one slow host cannot hold a run past its deploy. The pipeline also starts the Daily
+workflow when no daily pass has succeeded for 25 hours.
 
 **A source is failing.** The tracer logs `failed on <node>` with the error and carries on. A 403 or
 429 from one host slows that host down and the next run resumes where this one stopped. Persistent

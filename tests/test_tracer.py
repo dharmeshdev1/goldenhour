@@ -218,3 +218,20 @@ def test_a_source_in_cool_down_is_passed_over(tracer: Tracer) -> None:  # type: 
     assert {id(tracer._evm_adapter(Chain.ETHEREUM, a, {})) for a in addresses} == {id(blockscout)}
     refusing.clear()  # cooled down: both share the work again
     assert {id(tracer._evm_adapter(Chain.ETHEREUM, a, {})) for a in addresses} == {id(routescan), id(blockscout)}
+
+
+async def test_a_trace_is_stopped_hard_after_its_budget(tmp_path, monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    import asyncio
+    import time
+
+    from goldenhour import cli, tracer
+
+    async def endless(self, **kwargs: object) -> dict:  # type: ignore[no-untyped-def]
+        await asyncio.sleep(60)
+        return {}
+
+    monkeypatch.setattr(tracer.Tracer, "run", endless)
+    monkeypatch.setattr(cli, "HARD_STOP_GRACE_S", 0.2)
+    started = time.monotonic()
+    stats = await cli.trace_once("binance-2026-10", tmp_path, budget=0.1)
+    assert stats.get("hard_stop") == 1 and time.monotonic() - started < 10
