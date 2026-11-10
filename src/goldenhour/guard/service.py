@@ -48,15 +48,24 @@ def decide(payload: Mapping[str, Any] | str, guard: Guard, now: datetime) -> dic
         else:
             request = SigningRequest.model_validate(payload)
     except Exception as exc:  # a request Guard cannot read is refused, never crashed on
-        detail = exc.errors()[0]["msg"] if isinstance(exc, ValidationError) else f"{type(exc).__name__}: {exc}"
-        reason = f"Guard cannot read this request, so it refuses it: {detail}"
+        prefix = "Guard cannot read this request, so it refuses it: "
+        if isinstance(exc, ValidationError):
+            # Pydantic's messages describe the request, not the server: the caller needs them.
+            first = exc.errors()[0]
+            shown = f"{'.'.join(str(part) for part in first['loc']) or 'request'}: {first['msg']}"
+            detail = shown
+        else:
+            # An unexpected failure is described in the audit log only. Its text can name files or
+            # internals, so the caller gets a fixed reason.
+            shown = "it is not a signing request Guard can decode"
+            detail = f"{type(exc).__name__}: {exc}"
         head = None
         if guard.audit is not None:
             text = payload if isinstance(payload, str) else json.dumps(payload, sort_keys=True, default=str)
             digest = hashlib.sha256(text.encode()).hexdigest()
-            guard.audit.append({"type": "unreadable", "request_sha256": digest, "reason": reason}, now)
+            guard.audit.append({"type": "unreadable", "request_sha256": digest, "reason": prefix + detail}, now)
             head = guard.audit.head
-        finding = {"rule": "well-formed", "effect": "deny", "message": reason, "path": None}
+        finding = {"rule": "well-formed", "effect": "deny", "message": prefix + shown, "path": None}
         return {"decision": "deny", "reasons": [finding], "audit_record": head}
     decision = guard.check(request, now)
     return {**decision.to_json(), "audit_record": guard.audit.head if guard.audit is not None else None}

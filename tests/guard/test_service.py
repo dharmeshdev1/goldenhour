@@ -97,3 +97,24 @@ def test_returns_what_the_cli_prints(state: Path, tmp_path: Path, monkeypatch: p
         from_cli.pop(volatile)
         from_service.pop(volatile)
     assert from_cli == from_service
+
+
+def test_an_unexpected_failure_is_described_in_the_log_not_to_the_caller(
+    state: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from goldenhour.guard import service
+
+    def explode(payload: object) -> object:
+        raise RuntimeError("cannot open /srv/secret/keys.db")
+
+    body = withdrawal()
+    monkeypatch.setattr(service.SigningRequest, "model_validate", staticmethod(explode))
+    result = evaluate_json(body)
+    assert result["decision"] == "deny" and result["reasons"][0]["rule"] == "well-formed"
+    assert "/srv/secret" not in json.dumps(result)
+    logged = [json.loads(line) for line in (state / "guard-audit.jsonl").read_text().splitlines()]
+    assert "cannot open /srv/secret/keys.db" in logged[-1]["event"]["reason"]
+    # A validation error still tells the caller which field is wrong.
+    monkeypatch.undo()
+    bad = evaluate_json({"kind": "evm_tx"})
+    assert ":" in bad["reasons"][0]["message"].removeprefix("Guard cannot read this request, so it refuses it: ")
