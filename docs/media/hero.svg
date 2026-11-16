@@ -32,6 +32,6 @@
   </g>
   <line x1="312.0" y1="160" x2="312.0" y2="365" stroke="#8fd8ff" stroke-width="1.5" stroke-dasharray="4 5" opacity="0.9"/><text x="320.0" y="178" fill="#8fd8ff" font-size="15" font-family="ui-monospace,Menlo,monospace">first freeze, minute 56</text>
   <g font-family="ui-monospace,Menlo,monospace" font-size="16">
-    <text x="60" y="132"><tspan fill="#ff5a4f">verified stolen $6.29B</tspan><tspan fill="#a59a86">   </tspan><tspan fill="#8fd8ff">frozen $2.58B</tspan><tspan fill="#a59a86">   </tspan><tspan fill="#f2b33d">still held at trail addresses $2.86B</tspan></text>
+    <text x="60" y="132"><tspan fill="#ff5a4f">verified stolen $6.29B</tspan><tspan fill="#a59a86">   </tspan><tspan fill="#8fd8ff">frozen $2.58B</tspan><tspan fill="#a59a86">   </tspan><tspan fill="#f2b33d">still held at trail addresses $2.74B</tspan></text>
   </g>
 </svg>
