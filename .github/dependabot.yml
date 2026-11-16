@@ -12,10 +12,18 @@ updates:
     directory: /web
     schedule:
       interval: weekly
+    ignore:
+      # sigma 4 changes the graph renderer's API; the trail graph moves to it by hand.
+      - dependency-name: sigma
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: docker
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # The image runs the Python version CI tests (3.12); moving it is a deliberate change.
+      - dependency-name: python
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
   - package-ecosystem: docker-compose
     directory: /deploy
     schedule:
