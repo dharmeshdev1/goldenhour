@@ -33,7 +33,7 @@
     "next": "16.4.6",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "sigma": "3.0.2"
+    "sigma": "3.0.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.5",
